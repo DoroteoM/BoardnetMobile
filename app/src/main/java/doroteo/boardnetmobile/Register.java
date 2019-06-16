@@ -31,7 +31,7 @@ public class Register extends AppCompatActivity {
     EditText emailBox, usernameBox, passwordBox, passwordConfirmationBox;
     Button registerButton;
     TextView loginLink;
-    String URL ="https://boardnetapi.000webhostapp.com/api/auth/register";
+    String URL ="https://boardnetapi.000webhostapp.com/api";
     ProgressDialog progress;
 
     @Override
@@ -69,7 +69,7 @@ public class Register extends AppCompatActivity {
 
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                     Request.Method.POST,
-                                    URL,
+                                    URL + "/auth/register",
                                     new JSONObject(params),
                                     new Response.Listener<JSONObject>() {
                                         @Override
@@ -120,10 +120,9 @@ public class Register extends AppCompatActivity {
                                                                             .replace(",", "\n");
                                                     } catch (JSONException ignored) {
                                                     }
-                                                    Toast.makeText(Register.this, errors, Toast.LENGTH_LONG).show();
                                                     progress.dismiss();
+                                                    Toast.makeText(Register.this, errors, Toast.LENGTH_LONG).show();
                                                 }
-
                                             }
                                             catch (JSONException e)
                                             {

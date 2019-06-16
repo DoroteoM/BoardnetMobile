@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BoardnetMobile</string>
+    <string name="app_name">Boardnet Mobile</string>
     <string name="login_username">Username</string>
     <string name="login_button">Login</string>
     <string name="hello_world">Hello world!</string>

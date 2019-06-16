@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Poruka", "Navigation: " + clickItemObj);
                 if (clickItemObj.equals("Profile"))
                 {
-                    Intent intent = new Intent(MainActivity.this, UserDetails.class);
+                    Intent intent = new Intent(MainActivity.this, Profile.class);
                     startActivity(intent);
                 }
                 else if (clickItemObj.equals("Games"))
                 {
-                    Intent intent = new Intent(MainActivity.this, GameList.class);
+                    Intent intent = new Intent(MainActivity.this, Games.class);
                     startActivity(intent);
                 }
                 else
