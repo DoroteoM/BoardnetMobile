@@ -27,4 +27,7 @@
     <string name="bgg_username">BGG</string>
     <string name="save">Save</string>
     <string name="add_teammate">Add teammate</string>
+    <string name="show">Show</string>
+    <string name="search">Search</string>
+    <string name="addbgg">Add bgg library</string>
 </resources>

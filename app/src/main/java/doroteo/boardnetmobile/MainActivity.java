@@ -17,16 +17,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Main menu");
 
-        //Punjenje liste tj. stavarnje menu-a
         this.mainListView();
     }
 
     // This method use SimpleAdapter to show data in ListView.
     private void mainListView()
     {
-        setTitle("Main menu");
-
         String[] navigationTo = { "Profile", "Players", "Library", "Games"};
         //String[] descArr = { "Jerry", "Male", "43", "Singapore" };
 
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 //        SimpleAdapter simpleAdapter = new SimpleAdapter(this,itemDataList,android.R.layout.simple_list_item_2,
 //                new String[]{"title","description"},new int[]{android.R.id.text1,android.R.id.text2});
 
-        ListView listView = (ListView)findViewById(R.id.listMainNavigation);
+        ListView listView = (ListView)findViewById(R.id.mainListView);
         listView.setAdapter(adapterNavigationList);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
