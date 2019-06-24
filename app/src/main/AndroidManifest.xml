@@ -14,7 +14,7 @@
         <activity android:name=".Game">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".Games" />
         </activity>
         <activity android:name=".GameAlphabet">
             <meta-data

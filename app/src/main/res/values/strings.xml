@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Boardnet Mobile</string>
+    <string name="serverURL">https://boardnetapi.000webhostapp.com/api</string>
     <string name="login_username">Username</string>
     <string name="login_button">Login</string>
     <string name="hello_world">Hello world!</string>
@@ -30,4 +31,7 @@
     <string name="show">Show</string>
     <string name="search">Search</string>
     <string name="addbgg">Add bgg library</string>
+    <string name="title">Title</string>
+    <string name="year_published">Year published</string>
+    <string name="no_of_players">No. of players</string>
 </resources>

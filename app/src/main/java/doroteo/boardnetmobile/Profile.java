@@ -33,10 +33,10 @@ import java.util.Map;
 
 public class Profile extends AppCompatActivity {
     private SharedPreferences preferences;
+    private String URL = "https://boardnetapi.000webhostapp.com/api";
     private EditText nameEditText, surnameEditText, usernameEditText, emailEditText, bggUsernameEditText, dateOfBirthEditText;
     private DatePicker dateOfBirthDatePicker;
     private Button btnSave, btnAddTeammate, btnDatePicker;
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
     private int user_id, mYear, mMonth, mDay;
 
     @Override

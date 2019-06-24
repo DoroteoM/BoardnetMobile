@@ -1,16 +1,16 @@
 package doroteo.boardnetmobile;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,7 +34,6 @@ public class GameSearch extends AppCompatActivity {
     private String URL = "https://boardnetapi.000webhostapp.com/api";
     private String search;
     private ProgressDialog progress;
-    private List<JSONObject> listOfGames = new ArrayList<JSONObject>();
     private boolean waitForResponse = true;
 
 
@@ -46,16 +45,10 @@ public class GameSearch extends AppCompatActivity {
         setTitle("Search: " + search);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
 
-        try {
-            this.getGamesList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        
+        this.getGamesList();
     }
 
-    private void getGamesList() throws JSONException {
+    private void getGamesList() {
         RequestQueue requestQueue = Volley.newRequestQueue(GameSearch.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
@@ -67,13 +60,13 @@ public class GameSearch extends AppCompatActivity {
                         try {
                             if (response.getBoolean("success")) {
                                 JSONArray gameList = response.getJSONArray("result");
+                                List<JSONObject> listOfGames = new ArrayList<JSONObject>();
                                 for (int i = 0; i < gameList.length(); i++) {
                                     listOfGames.add(gameList.getJSONObject(i));
                                 }
-                                waitForResponse = false;
+                                createList(listOfGames);
                             }
                         } catch (JSONException e) {
-                            waitForResponse = false;
                             Log.e("Poruka", "GameSearch: " + e);
                         }
                     }
@@ -113,12 +106,12 @@ public class GameSearch extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 HashMap clickItemMap = (HashMap) clickItemObj;
-                String gameName = (String) clickItemMap.get("name");
                 String bggGameId = (String) clickItemMap.get("bgg_game_id");
 
-                Toast.makeText(GameSearch.this, "You select item is  " + gameName + " , " + bggGameId, Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(getBaseContext(), Game.class);
+                myIntent.putExtra("bgg_game_id", bggGameId);
+                startActivity(myIntent);
             }
         });
     }
-
 }
