@@ -7,41 +7,9 @@
     tools:context=".Game">
 
     <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="0dp"
-        android:layout_height="50"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/title"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/nameValueTextView"
-        android:layout_width="0dp"
-        android:layout_height="50"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="right"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/publishedTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/nameTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
         android:id="@+id/publishedTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -49,12 +17,12 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/publishedValueTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
@@ -64,15 +32,15 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/publishedTextView"
-        app:layout_constraintTop_toBottomOf="@+id/nameValueTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/playersTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/no_of_players"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -82,10 +50,10 @@
     <TextView
         android:id="@+id/playersValueTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:gravity="right"
@@ -97,10 +65,10 @@
     <TextView
         android:id="@+id/timeTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Playing time"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -110,10 +78,10 @@
     <TextView
         android:id="@+id/timeValueTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:gravity="right"
@@ -125,10 +93,10 @@
     <TextView
         android:id="@+id/ratingTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Rating"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -138,10 +106,10 @@
     <TextView
         android:id="@+id/ratingValueTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:gravity="right"
@@ -153,10 +121,10 @@
     <TextView
         android:id="@+id/rankTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Rank"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -166,10 +134,10 @@
     <TextView
         android:id="@+id/rankValueTextView"
         android:layout_width="0dp"
-        android:layout_height="50"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:gravity="right"
@@ -177,5 +145,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rankTextView"
         app:layout_constraintTop_toBottomOf="@+id/ratingValueTextView" />
+
+    <Button
+        android:id="@+id/addPlayButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/addPlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

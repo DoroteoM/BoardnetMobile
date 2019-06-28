@@ -3,11 +3,9 @@ package doroteo.boardnetmobile;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -30,40 +28,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameSearch extends AppCompatActivity {
+public class Library extends AppCompatActivity {
     private String URL = "https://boardnetapi.000webhostapp.com/api";
-    private String type, search;
-    private SharedPreferences searchPreferences;
+    private SharedPreferences preferences;
     private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_search);
-        searchPreferences = getSharedPreferences("search", MODE_PRIVATE);
-        search = getIntent().getStringExtra("search");
-        type = getIntent().getStringExtra("type");
-        if (search == null || type == null) {
-            if (searchPreferences.getString("search", "") != "") {
-                search = searchPreferences.getString("search", "");
-            } else {
-                this.finish();
-            }
-            if (searchPreferences.getString("type", "") != "") {
-                type = searchPreferences.getString("type", "");
-            } else {
-                this.finish();
-            }
-        }
-        setTitle("Search: " + search);
-        searchPreferences.edit().putString("search", search).apply();
-        searchPreferences.edit().putString("type", type).apply();
+        setContentView(R.layout.activity_library);
+        preferences = getSharedPreferences("API", MODE_PRIVATE);
+        setTitle("Library");
 
-        this.getGamesList();
+        this.getLibrary();
     }
 
-    private void getGamesList() {
-        progress = new ProgressDialog(GameSearch.this);
+    private void getLibrary() {
+        progress = new ProgressDialog(Library.this);
         progress.setTitle("Please Wait!");
         progress.setMessage("Loading list");
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -74,10 +55,10 @@ public class GameSearch extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    RequestQueue requestQueue = Volley.newRequestQueue(GameSearch.this);
+                    RequestQueue requestQueue = Volley.newRequestQueue(Library.this);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.GET,
-                            URL + "/games/" + type + "/" + search,
+                            URL + "/libraries/user/" + preferences.getString("username", "test"),
                             null,
                             new Response.Listener<JSONObject>() {
                                 @Override
@@ -101,7 +82,7 @@ public class GameSearch extends AppCompatActivity {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     Log.e("Poruka", "Request filed: " + error.toString());
-                                    Toast.makeText(GameSearch.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Library.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                 }
                             });
@@ -113,6 +94,7 @@ public class GameSearch extends AppCompatActivity {
             }
         }).start();
     }
+
 
     private void createList(List<JSONObject> listOfGames) throws JSONException {
         ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
@@ -128,7 +110,7 @@ public class GameSearch extends AppCompatActivity {
             itemDataList.add(listItemMap);
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(GameSearch.this, itemDataList, R.layout.activity_game_search,
+        SimpleAdapter simpleAdapter = new SimpleAdapter(Library.this, itemDataList, R.layout.activity_game_search,
                 new String[]{"imageId", "bgg_game_id", "name"}, new int[]{R.id.gameImageView, R.id.bggGameIdTextView, R.id.gameNameTextView});
 
         ListView listView = (ListView) findViewById(R.id.gameListView);

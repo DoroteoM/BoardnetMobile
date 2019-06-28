@@ -34,4 +34,5 @@
     <string name="title">Title</string>
     <string name="year_published">Year published</string>
     <string name="no_of_players">No. of players</string>
+    <string name="addPlay">Add play</string>
 </resources>

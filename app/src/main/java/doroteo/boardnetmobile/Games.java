@@ -28,6 +28,7 @@ public class Games extends AppCompatActivity {
     Button addLibraryGamesButton, searchGamesButton, alphabetButton;
     String URL = "https://boardnetapi.000webhostapp.com/api";
     ProgressDialog progress;
+    static final int PICK_CONTACT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,12 @@ public class Games extends AppCompatActivity {
 
     private void alphabetSearch() {
         final Spinner spinner = findViewById(R.id.alphabetSpinner);
-        String[] items = new String['z' - 'a' + 1 + '9' - '0' + 1];
-        for (char letter = 'a'; letter <= 'z'; ++letter) {
-            items[letter - 'a'] = String.valueOf(letter);
+        String[] items = new String['Z' - 'A' + 1 + '9' - '0' + 1];
+        for (char letter = 'A'; letter <= 'Z'; ++letter) {
+            items[letter - 'A'] = String.valueOf(letter);
         }
         for (char letter = '0'; letter <= '9'; ++letter) {
-            items[letter - '0' + 'z' - 'a' + 1] = String.valueOf(letter);
+            items[letter - '0' + 'Z' - 'A' + 1] = String.valueOf(letter);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(adapter);
@@ -57,14 +58,16 @@ public class Games extends AppCompatActivity {
         alphabetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(getBaseContext(), GameAlphabet.class);
-                myIntent.putExtra("letter", spinner.getSelectedItem().toString());
+                Intent myIntent = new Intent(getBaseContext(), GameSearch.class);
+                myIntent.putExtra("search", spinner.getSelectedItem().toString());
+                myIntent.putExtra("type", "letter");
                 startActivity(myIntent);
             }
         });
     }
 
     private void searchGame() {
+
         searchGamesButton = (Button) findViewById(R.id.searchButton);
         searchGamesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +78,7 @@ public class Games extends AppCompatActivity {
                 } else {
                     Intent myIntent = new Intent(getBaseContext(), GameSearch.class);
                     myIntent.putExtra("search", searchEditText.getText().toString());
+                    myIntent.putExtra("type", "search");
                     startActivity(myIntent);
                 }
             }

@@ -1,9 +1,11 @@
 package doroteo.boardnetmobile;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +23,7 @@ public class Game extends AppCompatActivity {
     private SharedPreferences preferences;
     private String URL = "https://boardnetapi.000webhostapp.com/api";
     private String bgg_game_id;
-    private TextView nameValueTextView, publishedValueTextView, playersValueTextView, timeValueTextView, ratingValueTextView, rankValueTextView;
+    private TextView publishedValueTextView, playersValueTextView, timeValueTextView, ratingValueTextView, rankValueTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +31,12 @@ public class Game extends AppCompatActivity {
         setTitle("Game");
         setContentView(R.layout.activity_game);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
-        bgg_game_id = getIntent().getStringExtra("bgg_game_id");
 
-        nameValueTextView = (TextView) findViewById(R.id.nameValueTextView);
+        this.getGame();
+    }
+
+    private void getGame() {
+        bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         publishedValueTextView = (TextView) findViewById(R.id.publishedValueTextView);
         playersValueTextView = (TextView) findViewById(R.id.playersValueTextView);
         timeValueTextView = (TextView) findViewById(R.id.timeValueTextView);
@@ -49,7 +54,7 @@ public class Game extends AppCompatActivity {
                         try {
                             if (response.getBoolean("success")) {
                                 if (!response.getJSONObject("result").getString("name").equals("null"))
-                                    nameValueTextView.setText(response.getJSONObject("result").getString("name"));
+                                    setTitle(response.getJSONObject("result").getString("name"));
                                 if (!response.getJSONObject("result").getString("year_published").equals("null"))
                                     publishedValueTextView.setText(response.getJSONObject("result").getString("year_published"));
                                 String maxP, minP;
@@ -85,5 +90,27 @@ public class Game extends AppCompatActivity {
                     }
                 });
         requestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            Log.d("CDA", "onKeyDown Called");
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+        setIntent.addCategory(Intent.CATEGORY_HOME);
+        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(setIntent);
     }
 }

@@ -11,17 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Library">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".Game">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Games" />
+                android:value=".GameSearch" />
         </activity>
-        <activity android:name=".GameAlphabet">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Games" />
-        </activity>
-        <activity android:name=".GameSearch" >
+        <activity android:name=".GameSearch">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Games" />
