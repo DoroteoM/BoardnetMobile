@@ -78,7 +78,7 @@ public class Games extends AppCompatActivity {
                 } else {
                     Intent myIntent = new Intent(getBaseContext(), GameSearch.class);
                     myIntent.putExtra("search", searchEditText.getText().toString());
-                    myIntent.putExtra("type", "search");
+                    myIntent.putExtra("type", "name");
                     startActivity(myIntent);
                 }
             }

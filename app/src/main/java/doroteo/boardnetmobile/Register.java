@@ -66,7 +66,6 @@ public class Register extends AppCompatActivity {
                             params.put("username", usernameBox.getText().toString());
                             params.put("password", passwordBox.getText().toString());
                             params.put("password_confirmation", passwordConfirmationBox.getText().toString());
-
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                     Request.Method.POST,
                                     URL + "/auth/register",

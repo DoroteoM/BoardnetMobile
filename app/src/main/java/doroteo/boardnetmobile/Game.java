@@ -1,11 +1,13 @@
 package doroteo.boardnetmobile;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +21,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Game extends AppCompatActivity {
     private SharedPreferences preferences;
+    private ProgressDialog progress;
     private String URL = "https://boardnetapi.000webhostapp.com/api";
     private String bgg_game_id;
     private TextView publishedValueTextView, playersValueTextView, timeValueTextView, ratingValueTextView, rankValueTextView;
+    private Button manageLibraryButton, addPlayButton;
+    private Boolean inLibrary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +39,20 @@ public class Game extends AppCompatActivity {
         setTitle("Game");
         setContentView(R.layout.activity_game);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
+        bgg_game_id = getIntent().getStringExtra("bgg_game_id");
+        manageLibraryButton = (Button) findViewById(R.id.manageLibraryButton);
+        addPlayButton = (Button) findViewById(R.id.addPlayButton);
 
         this.getGame();
+        manageLibraryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manageLibrary();
+            }
+        });
     }
 
     private void getGame() {
-        bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         publishedValueTextView = (TextView) findViewById(R.id.publishedValueTextView);
         playersValueTextView = (TextView) findViewById(R.id.playersValueTextView);
         timeValueTextView = (TextView) findViewById(R.id.timeValueTextView);
@@ -46,7 +62,7 @@ public class Game extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(Game.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                URL + "/games/" + bgg_game_id,
+                URL + "/games/" + bgg_game_id + "/" + preferences.getString("username", "test"),
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -76,6 +92,13 @@ public class Game extends AppCompatActivity {
                                     ratingValueTextView.setText(response.getJSONObject("result").getString("average_rating"));
                                 if (!response.getJSONObject("result").getString("rank").equals("null"))
                                     rankValueTextView.setText(response.getJSONObject("result").getString("rank"));
+                                if (!response.getJSONObject("result").getString("inLibrary").equals("null"))
+                                {
+                                    inLibrary = response.getJSONObject("result").getBoolean("inLibrary");
+                                    if (inLibrary == true)
+                                        manageLibraryButton.setText("Remove from library");
+                                    manageLibraryButton.setVisibility(View.VISIBLE);
+                                }
                             }
                         } catch (JSONException e) {
                             Log.e("Poruka", "Game: failed reading. \r\n" + e.toString());
@@ -91,26 +114,143 @@ public class Game extends AppCompatActivity {
                 });
         requestQueue.add(jsonObjectRequest);
     }
+    
+    private void manageLibrary() {
+        progress = new ProgressDialog(Game.this);
+        progress.setTitle("Please Wait!");
+        progress.setMessage("Loading list");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.show();
+        progress.setCancelable(false);
 
+        if (inLibrary == false) addGameToLibrary();
+        else removeGameFromLibrary();
+    }
+
+    private void addGameToLibrary() {
+        //Thread je potreban kako bi se prikazivao loading screen
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Game.this);
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", preferences.getString("username", "test"));
+                    params.put("bgg_game_id", bgg_game_id);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.POST,
+                            URL + "/libraries",
+                            new JSONObject(params),
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            Toast.makeText(Game.this, "Game added to library", Toast.LENGTH_LONG).show();
+                                            inLibrary = true;
+                                            manageLibraryButton.setText("Remove from library");
+                                        } else {
+                                            Toast.makeText(Game.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "Error: " + e.toString());
+                                        Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                    progress.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Poruka", "Error: " + error.toString());
+                                    Toast.makeText(Game.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    progress.dismiss();
+                }
+            }
+        }).start();
+    }
+
+    private void removeGameFromLibrary() {
+        //Thread je potreban kako bi se prikazivao loading screen
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Game.this);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.GET,
+                            URL + "/libraries/delete/user/" + preferences.getString("username","test") + "/game/" + bgg_game_id,
+                            null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            Toast.makeText(Game.this, "Game removed from library", Toast.LENGTH_LONG).show();
+                                            inLibrary = false;
+                                            manageLibraryButton.setText("Add to library");
+                                        } else {
+                                            Toast.makeText(Game.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "Error: " + e.toString());
+                                        Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                    progress.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Poruka", "Error: " + error.toString());
+                                    Toast.makeText(Game.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    progress.dismiss();
+                }
+            }
+        }).start();
+    }
+
+    //Back button
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            Log.d("CDA", "onKeyDown Called");
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             onBackPressed();
-            return true;
+            return  true;
         }
-        return super.onKeyDown(keyCode, event);
+        return super.onOptionsItemSelected(item);
     }
 
 
-    @Override
-    public void onBackPressed() {
-        Log.d("CDA", "onBackPressed Called");
-        Intent setIntent = new Intent(Intent.ACTION_MAIN);
-        setIntent.addCategory(Intent.CATEGORY_HOME);
-        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(setIntent);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+//        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+//                && keyCode == KeyEvent.KEYCODE_BACK
+//                && event.getRepeatCount() == 0) {
+//            Log.d("CDA", "onKeyDown Called");
+//            onBackPressed();
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("CDA", "onBackPressed Called");
+//        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+//        setIntent.addCategory(Intent.CATEGORY_HOME);
+//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(setIntent);
+//    }
 }
