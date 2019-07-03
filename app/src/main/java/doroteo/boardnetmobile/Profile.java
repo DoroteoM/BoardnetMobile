@@ -2,7 +2,6 @@ package doroteo.boardnetmobile;
 
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,7 +50,7 @@ public class Profile extends AppCompatActivity {
         emailEditText = (EditText) findViewById(R.id.emailEditText);
         bggUsernameEditText = (EditText) findViewById(R.id.bggUsernameEditText);
         btnSave = (Button) findViewById(R.id.btnSave);
-        btnAddTeammate = (Button) findViewById(R.id.btnAddTeammate);
+        btnAddTeammate = (Button) findViewById(R.id.btnAddFriend);
         btnDatePicker = (Button) findViewById(R.id.dateOfBirthButton);
         dateOfBirthEditText = (EditText) findViewById(R.id.dateOfBirthEditText);
 

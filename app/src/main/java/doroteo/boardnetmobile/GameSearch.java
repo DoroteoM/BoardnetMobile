@@ -33,32 +33,15 @@ import java.util.Map;
 public class GameSearch extends AppCompatActivity {
     private String URL = "https://boardnetapi.000webhostapp.com/api";
     private String type, search;
-//    private SharedPreferences searchPreferences;
     private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_search);
-//        searchPreferences = getSharedPreferences("search", MODE_PRIVATE);
         search = getIntent().getStringExtra("search");
         type = getIntent().getStringExtra("type");
-//        if (search == null || type == null) {
-//            if (searchPreferences.getString("search", "") != "") {
-//                search = searchPreferences.getString("search", "");
-//            } else {
-//                this.finish();
-//            }
-//            if (searchPreferences.getString("type", "") != "") {
-//                type = searchPreferences.getString("type", "");
-//            } else {
-//                this.finish();
-//            }
-//        }
         setTitle("Search: " + search);
-//        searchPreferences.edit().putString("search", search).apply();
-//        searchPreferences.edit().putString("type", type).apply();
-
         this.getGamesList();
     }
 

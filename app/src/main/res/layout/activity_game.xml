@@ -155,7 +155,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/addToLibrary"
+        android:text="@string/add_to_library"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/addPlayButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -170,7 +170,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/addPlay"
+        android:text="@string/add_play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

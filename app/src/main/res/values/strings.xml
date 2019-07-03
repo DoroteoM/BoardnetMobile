@@ -30,10 +30,12 @@
     <string name="add_teammate">Add teammate</string>
     <string name="show">Show</string>
     <string name="search">Search</string>
-    <string name="addbgg">Add bgg library</string>
+    <string name="add_bgg">Add bgg library</string>
     <string name="title">Title</string>
     <string name="year_published">Year published</string>
     <string name="no_of_players">No. of players</string>
-    <string name="addPlay">Add play</string>
-    <string name="addToLibrary">Add to library</string>
+    <string name="add_play">Add play</string>
+    <string name="add_to_library">Add to library</string>
+    <string name="find_friend_by_name">Find by name</string>
+    <string name="find_friend_by_username">Find by username</string>
 </resources>
