@@ -32,8 +32,8 @@ import java.util.Map;
 
 public class GameSearch extends AppCompatActivity {
     private String URL = "https://boardnetapi.000webhostapp.com/api";
-    private String type, search;
     private ProgressDialog progress;
+    private String type, search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

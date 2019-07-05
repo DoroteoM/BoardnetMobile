@@ -9,14 +9,14 @@
     <!-- Lista se puni programski u .java -->
     <ListView
         android:id="@+id/friendListView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:choiceMode="singleChoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:dividerHeight="5dp"
         android:focusable="false"
+        android:choiceMode="singleChoice"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- Below layout xml is used for each ListView's item.-->
     <RelativeLayout
@@ -37,7 +37,7 @@
             android:layout_alignParentBottom="true" />
 
         <TextView
-            android:id="@+id/friendNameTextView"
+            android:id="@+id/friendSearchNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -46,16 +46,18 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/friendIdTextView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
+            android:id="@+id/friendSearchUsernameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/friendSearchNameTextView"
+            android:layout_toRightOf="@id/friendImageView"
+            android:textSize="20dp" />
 
-        <TextView
-            android:id="@+id/friendUsernameTextView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
+        <!--<TextView-->
+            <!--android:id="@+id/friendSearchUsernameTextView"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:visibility="gone" />-->
 
     </RelativeLayout>
 

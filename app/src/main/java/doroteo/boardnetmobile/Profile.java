@@ -40,20 +40,30 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Profile");
         setContentView(R.layout.activity_profile);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
+        setTitle("Profile");
 
         nameEditText = (EditText) findViewById(R.id.nameEditText);
         surnameEditText = (EditText) findViewById(R.id.surnameEditText);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         emailEditText = (EditText) findViewById(R.id.emailEditText);
         bggUsernameEditText = (EditText) findViewById(R.id.bggUsernameEditText);
-        btnSave = (Button) findViewById(R.id.btnSave);
-        btnAddTeammate = (Button) findViewById(R.id.btnAddFriend);
-        btnDatePicker = (Button) findViewById(R.id.dateOfBirthButton);
         dateOfBirthEditText = (EditText) findViewById(R.id.dateOfBirthEditText);
+        btnDatePicker = (Button) findViewById(R.id.dateOfBirthButton);
+        btnSave = (Button) findViewById(R.id.btnSave);
 
+        this.getUser();
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
+            }
+        });
+    }
+
+    private void getUser() {
         RequestQueue requestQueue = Volley.newRequestQueue(Profile.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
@@ -108,7 +118,6 @@ public class Profile extends AppCompatActivity {
 
                     DatePickerDialog datePickerDialog = new DatePickerDialog(Profile.this,
                             new DatePickerDialog.OnDateSetListener() {
-
                                 @Override
                                 public void onDateSet(DatePicker view, int year, int month, int date) {
                                     dateOfBirthEditText.setText(year + "-" + (month < 9 ? "0" : "") + (month + 1) + "-" + (date < 10 ? "0" : "")  + date);
@@ -120,58 +129,53 @@ public class Profile extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                RequestQueue requestQueue = Volley.newRequestQueue(Profile.this);
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", usernameEditText.getText().toString());
-                params.put("email", emailEditText.getText().toString());
-                params.put("name", nameEditText.getText().toString());
-                params.put("surname", surnameEditText.getText().toString());
-                params.put("date_of_birth", dateOfBirthEditText.getText().toString());
-                params.put("bgg_username", bggUsernameEditText.getText().toString());
+    private void save() {
+        RequestQueue requestQueue = Volley.newRequestQueue(Profile.this);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("username", usernameEditText.getText().toString());
+        params.put("email", emailEditText.getText().toString());
+        params.put("name", nameEditText.getText().toString());
+        params.put("surname", surnameEditText.getText().toString());
+        params.put("date_of_birth", dateOfBirthEditText.getText().toString());
+        params.put("bgg_username", bggUsernameEditText.getText().toString());
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.POST,
-                        URL + "/users/update/" + user_id,
-                        new JSONObject(params),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                URL + "/users/update/" + user_id,
+                new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            if (response.getBoolean("success")) {
+                                preferences.edit().putString("username", response.getJSONObject("result").getString("username")).apply();
+                                Toast.makeText(Profile.this, "Save successful", Toast.LENGTH_LONG).show();
+                            } else {
                                 try {
-                                    //ako je success = true znaci da je registracija uspjela
-                                    if (response.getBoolean("success")) {
-                                        preferences.edit().putString("username", response.getJSONObject("result").getString("username")).apply();
-                                        Toast.makeText(Profile.this, "Save successful", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        try {
-                                            Toast.makeText(Profile.this, response.getJSONObject("result").toString().replaceAll("[\\[\\]{}\"]", ""), Toast.LENGTH_LONG).show();
-                                        } catch (JSONException e) {
-                                            Log.e("Poruka", e.toString());
-                                            Toast.makeText(Profile.this, e.toString(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
+                                    Toast.makeText(Profile.this, response.getJSONObject("result").toString().replaceAll("[\\[\\]{}\"]", ""), Toast.LENGTH_LONG).show();
                                 } catch (JSONException e) {
-                                    Log.e("Poruka", "User: failed reading");
+                                    Log.e("Poruka", e.toString());
+                                    Toast.makeText(Profile.this, e.toString(), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        },
-
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("Poruka", "Error: " + error.toString());
-                                Toast.makeText(Profile.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
-                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(Profile.this, e.toString(), Toast.LENGTH_LONG).show();
                         }
-                ) {
-                };
-                requestQueue.add(jsonObjectRequest);
-            }
-        });
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Poruka", "Error: " + error.toString());
+                        Toast.makeText(Profile.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        ) {
+        };
+        requestQueue.add(jsonObjectRequest);
     }
+
 }

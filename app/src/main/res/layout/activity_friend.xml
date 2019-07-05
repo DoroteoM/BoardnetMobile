@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    tools:context=".Friend">
 
     <TextView
         android:id="@+id/nameTextView"
@@ -18,8 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/nameEditText"
+    <TextView
+        android:id="@+id/nameValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -28,7 +28,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/nameTextView"
@@ -48,8 +49,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
-    <EditText
-        android:id="@+id/surnameEditText"
+    <TextView
+        android:id="@+id/surnameValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -58,11 +59,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/surnameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"
         tools:ignore="LabelFor"
         android:autofillHints="@string/surname"/>
 
@@ -78,45 +80,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/surnameTextView" />
 
-    <EditText
-        android:id="@+id/dateOfBirthEditText"
-        android:layout_width="146dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/dateOfBirthTextView"
-        app:layout_constraintTop_toBottomOf="@+id/surnameEditText" />
-
-    <Button
-        android:id="@+id/dateOfBirthButton"
+    <TextView
+        android:id="@+id/dateOfBirthValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="SELECT"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/dateOfBirthEditText"
-        app:layout_constraintTop_toBottomOf="@+id/surnameEditText" />
-    <!---->
-    <!--<DatePicker-->
-        <!--android:id="@+id/dateOfBirthDatePicker"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:layout_marginRight="16dp"-->
-        <!--android:datePickerMode="calendar"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toEndOf="@+id/dateOfBirthTextView"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/surnameEditText" />-->
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/dateOfBirthTextView"
+        app:layout_constraintTop_toBottomOf="@+id/surnameValueTextView" />
+    
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="126dp"
@@ -129,8 +108,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateOfBirthTextView" />
 
-    <EditText
-        android:id="@+id/usernameEditText"
+    <TextView
+        android:id="@+id/usernameValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -139,11 +118,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/usernameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/dateOfBirthEditText"
+        app:layout_constraintTop_toBottomOf="@+id/dateOfBirthValueTextView"
         tools:ignore="LabelFor"
         android:autofillHints="@string/username"/>
 
@@ -159,8 +139,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
-    <EditText
-        android:id="@+id/emailEditText"
+    <TextView
+        android:id="@+id/emailValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -169,11 +149,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textEmailAddress"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/usernameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/usernameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/usernameValueTextView"
         tools:ignore="LabelFor"
         android:autofillHints="@string/email"/>
 
@@ -189,8 +170,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
-    <EditText
-        android:id="@+id/bggUsernameEditText"
+    <TextView
+        android:id="@+id/bggUsernameValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -199,26 +180,27 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="right"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/bggUsernameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/emailValueTextView"
         tools:ignore="LabelFor"
         android:autofillHints="@string/bgg_username"/>
 
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnAddFriend"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/save"
+        android:layout_marginBottom="7dp"
+        android:text="@string/add_friend"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

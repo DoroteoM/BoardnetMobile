@@ -28,7 +28,6 @@ public class Games extends AppCompatActivity {
     Button addLibraryGamesButton, searchGamesButton, alphabetButton;
     String URL = "https://boardnetapi.000webhostapp.com/api";
     ProgressDialog progress;
-    static final int PICK_CONTACT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,6 @@ public class Games extends AppCompatActivity {
     }
 
     private void searchGame() {
-
         searchGamesButton = (Button) findViewById(R.id.searchButton);
         searchGamesButton.setOnClickListener(new View.OnClickListener() {
             @Override
