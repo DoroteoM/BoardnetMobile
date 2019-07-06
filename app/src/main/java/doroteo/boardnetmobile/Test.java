@@ -44,7 +44,7 @@ public class Test extends AppCompatActivity {
 //// Instantiate the RequestQueue.
 //        String $temp = "teo";
 //        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL ="https://boardnetapi.000webhostapp.com/api/test/hello1";
+//        String URL ="http://boardnetapi.hostingerapp.com/api/test/hello1";
 //        Map<String, String> params = new HashMap<String, String>();
 //        params.put("test", "doroteo");
 //// Request a string response from the provided URL.

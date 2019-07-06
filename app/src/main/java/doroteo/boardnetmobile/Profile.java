@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class Profile extends AppCompatActivity {
     private SharedPreferences preferences;
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private EditText nameEditText, surnameEditText, usernameEditText, emailEditText, bggUsernameEditText, dateOfBirthEditText;
     private DatePicker dateOfBirthDatePicker;
     private Button btnSave, btnAddTeammate, btnDatePicker;
@@ -142,8 +142,8 @@ public class Profile extends AppCompatActivity {
         params.put("bgg_username", bggUsernameEditText.getText().toString());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                URL + "/users/update/" + user_id,
+                Request.Method.PUT,
+                URL + "/users/" + user_id,
                 new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override

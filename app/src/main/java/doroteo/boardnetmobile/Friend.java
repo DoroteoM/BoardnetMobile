@@ -1,9 +1,12 @@
 package doroteo.boardnetmobile;
 
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +21,23 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Friend extends AppCompatActivity {
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
+    private SharedPreferences preferences;
+    private ProgressDialog progress;
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private TextView nameValueTextView, surnameValueTextView, usernameValueTextView, emailValueTextView, bggUsernameValueTextView, dateOfBirthValueTextView;
     private Button btnAddFriend;
-    private String username, name;
+    private String myUsername, friendUsername, name;
+    private Boolean befriended;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
+        preferences = getSharedPreferences("API", MODE_PRIVATE);
         setTitle("User");
 
         nameValueTextView = (TextView) findViewById(R.id.nameValueTextView);
@@ -37,16 +47,135 @@ public class Friend extends AppCompatActivity {
         bggUsernameValueTextView = (TextView) findViewById(R.id.bggUsernameValueTextView);
         dateOfBirthValueTextView = (TextView) findViewById(R.id.dateOfBirthValueTextView);
         btnAddFriend = (Button) findViewById(R.id.btnAddFriend);
+        myUsername = preferences.getString("username", "test");
+        friendUsername = getIntent().getStringExtra("username");
 
-        username = getIntent().getStringExtra("username");
         this.getUser();
+        btnAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manageFriends();
+            }
+        });
+    }
+
+    private void manageFriends() {
+        progress = new ProgressDialog(Friend.this);
+        progress.setTitle("Please Wait!");
+        progress.setMessage("Loading list");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.show();
+        progress.setCancelable(false);
+
+        if (befriended == false) addFriend();
+        else removeFriend();
+    }
+
+    private void addFriend() {
+        //Thread je potreban kako bi se prikazivao loading screen
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", myUsername);
+                    params.put("friend_username", friendUsername);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.POST,
+                            URL + "/friends",
+                            new JSONObject(params),
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            Toast.makeText(Friend.this, "Friend added", Toast.LENGTH_LONG).show();
+                                            befriended = true;
+                                            btnAddFriend.setText("Remove friend");
+                                        } else {
+                                            Toast.makeText(Friend.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "Error: " + e.toString());
+                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                    progress.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError e) {
+                                    Log.e("Poruka", "Error: " + e.toString());
+                                    Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    progress.dismiss();
+                    Log.e("Poruka", "Error: " + e.toString());
+//                    Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }).start();
+    }
+
+    private void removeFriend() {
+        //Thread je potreban kako bi se prikazivao loading screen
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", myUsername);
+                    params.put("friend_username", friendUsername);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.DELETE,
+                            URL + "/friends/user/" + myUsername + "/friend/" + friendUsername,
+                            null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            Toast.makeText(Friend.this, "Friend removed", Toast.LENGTH_LONG).show();
+                                            befriended = false;
+                                            btnAddFriend.setText("Add friend");
+                                        } else {
+                                            Toast.makeText(Friend.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "Error: " + e.toString());
+                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                    progress.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError e) {
+                                    Log.e("Poruka", "Error: " + e.toString());
+                                    Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    progress.dismiss();
+                    Log.e("Poruka", "Error: " + e.toString());
+//                    Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }).start();
     }
 
     private void getUser() {
         RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                URL + "/users/" + username,
+                URL + "/users/" + friendUsername,
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -67,7 +196,7 @@ public class Friend extends AppCompatActivity {
                                 if (!response.getJSONObject("result").getString("bgg_username").equals("null"))
                                     bggUsernameValueTextView.setText(response.getJSONObject("result").getString("bgg_username"));
                                 name = nameValueTextView.getText().toString() + ' ' + surnameValueTextView.getText().toString();
-                                if (name.equals(" ")) setTitle(username);
+                                if (name.equals(" ")) setTitle(friendUsername);
                                 else setTitle(name);
                             }
                         } catch (JSONException e) {

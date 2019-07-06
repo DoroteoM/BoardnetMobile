@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Boardnet Mobile</string>
-    <string name="serverURL">https://boardnetapi.000webhostapp.com/api</string>
+    <string name="serverURL">http://boardnetapi.hostingerapp.com/api</string>
     <string name="login_username">Username</string>
     <string name="login_button">Login</string>
     <string name="hello_world">Hello world!</string>

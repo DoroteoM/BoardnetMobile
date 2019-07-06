@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FriendSearch extends AppCompatActivity {
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private SharedPreferences preferences;
     private ProgressDialog progress;
     private String search, by;

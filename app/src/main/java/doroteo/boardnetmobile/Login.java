@@ -41,7 +41,7 @@ public class Login extends AppCompatActivity {
     Button loginButton;
     TextView registerLink;
     ProgressBar loading;
-    private String URL ="https://boardnetapi.000webhostapp.com/api/auth/login";
+    private String URL ="http://boardnetapi.hostingerapp.com/api";
     private ProgressDialog progress;
     private CheckBox saveLoginCheckBox;
     private Boolean saveLogin;
@@ -76,99 +76,7 @@ public class Login extends AppCompatActivity {
         {
             @Override
             public void onClick(View v) {
-                progress = new ProgressDialog(Login.this);
-                progress.setTitle("Please Wait!");
-                progress.setMessage("Attempting to Login");
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.show();
-                progress.setCancelable(false);
-
-                //Thread je potreban kako bi se prikazivao loading screen
-                new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            RequestQueue requestQueue = Volley.newRequestQueue(Login.this);
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put("username", usernameBox.getText().toString());
-                            params.put("password", passwordBox.getText().toString());
-                            loginPrefsEditor = loginPreferences.edit();
-
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                Request.Method.POST,
-                                URL,
-                                new JSONObject(params),
-                                new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        //Toast.makeText(Register.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                                        try
-                                    {
-                                        //ako je success = true znaci da je registracija uspjela
-                                        if (response.getString("response").equals("success"))
-                                        {
-                                            Log.e("Poruka", "Token: " + response.getJSONObject("result").getString("token"));
-                                            preferences.edit().putString("token", response.getJSONObject("result").getString("token")).apply();
-                                            preferences.edit().putString("username", usernameBox.getText().toString()).apply();
-
-                                            if (saveLoginCheckBox.isChecked()) {
-                                                loginPrefsEditor.putBoolean("saveLogin", true);
-                                                loginPrefsEditor.putBoolean("saveLogin", true);
-                                                loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
-                                                loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
-                                            } else {
-                                                loginPrefsEditor.clear();
-                                                loginPrefsEditor.commit();
-                                            }
-
-                                            progress.dismiss();
-                                            //Toast.makeText(Login.this, "Login successful", Toast.LENGTH_LONG).show();
-                                            startActivity(new Intent(Login.this, MainActivity.class));
-                                        }
-                                        else {
-                                            //ako je response = error znaci da je registracija nije uspjela, prolazi se kroz errors da se vidi u cemu je problem
-                                            try {
-                                                if (response.getString("message").equals("invalid_credentials"))
-                                                {
-                                                    Log.e("Poruka", "Wrong username or password.");
-                                                    Toast.makeText(Login.this, "Wrong username or password.", Toast.LENGTH_LONG).show();
-                                                }
-                                                else if (response.getString("message").equals("failed_to_create_token"))
-                                                {
-                                                    Log.e("Poruka", "Failed to create token.");
-                                                    Toast.makeText(Login.this, "Failed to create token.", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                            catch (JSONException e)
-                                            {
-                                                Log.e("Poruka", e.toString());
-                                                Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
-                                            }
-                                            progress.dismiss();
-                                        }
-
-                                    }
-                                        catch (JSONException e)
-                                    {
-                                        Log.e("Poruka", "User: failed reading" );
-                                    }
-                                }
-                                },
-                                new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Log.e("Poruka","Error: " + error.toString());
-                                        progress.dismiss();
-                                        Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            );
-                            requestQueue.add(jsonObjectRequest);
-                        } catch (Exception e) {
-                            progress.dismiss();
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                login();
             }
         });
 
@@ -179,5 +87,101 @@ public class Login extends AppCompatActivity {
                 startActivity(new Intent(Login.this, Register.class));
             }
         });
+    }
+
+    private void login() {
+        progress = new ProgressDialog(Login.this);
+        progress.setTitle("Please Wait!");
+        progress.setMessage("Attempting to Login");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.show();
+        progress.setCancelable(false);
+
+        //Thread je potreban kako bi se prikazivao loading screen
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Login.this);
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", usernameBox.getText().toString());
+                    params.put("password", passwordBox.getText().toString());
+                    loginPrefsEditor = loginPreferences.edit();
+
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        Request.Method.POST,
+                        URL + "/auth/login",
+                        new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //Toast.makeText(Register.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                try
+                            {
+                                //ako je success = true znaci da je registracija uspjela
+                                if (response.getString("response").equals("success"))
+                                {
+                                    Log.e("Poruka", "Token: " + response.getJSONObject("result").getString("token"));
+                                    preferences.edit().putString("token", response.getJSONObject("result").getString("token")).apply();
+                                    preferences.edit().putString("username", usernameBox.getText().toString()).apply();
+
+                                    if (saveLoginCheckBox.isChecked()) {
+                                        loginPrefsEditor.putBoolean("saveLogin", true);
+                                        loginPrefsEditor.putBoolean("saveLogin", true);
+                                        loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
+                                        loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
+                                    } else {
+                                        loginPrefsEditor.clear();
+                                        loginPrefsEditor.commit();
+                                    }
+
+                                    progress.dismiss();
+                                    //Toast.makeText(Login.this, "Login successful", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(Login.this, MainActivity.class));
+                                }
+                                else {
+                                    //ako je response = error znaci da je registracija nije uspjela, prolazi se kroz errors da se vidi u cemu je problem
+                                    try {
+                                        if (response.getString("message").equals("invalid_credentials"))
+                                        {
+                                            Log.e("Poruka", "Wrong username or password.");
+                                            Toast.makeText(Login.this, "Wrong username or password.", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (response.getString("message").equals("failed_to_create_token"))
+                                        {
+                                            Log.e("Poruka", "Failed to create token.");
+                                            Toast.makeText(Login.this, "Failed to create token.", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    catch (JSONException e)
+                                    {
+                                        Log.e("Poruka", e.toString());
+                                        Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                    progress.dismiss();
+                                }
+
+                            }
+                                catch (JSONException e)
+                            {
+                                Log.e("Poruka", "User: failed reading" );
+                            }
+                        }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Poruka","Error: " + error.toString());
+                                progress.dismiss();
+                                Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    );
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    progress.dismiss();
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

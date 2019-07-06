@@ -26,7 +26,7 @@ public class Games extends AppCompatActivity {
     private SharedPreferences preferences;
     EditText bggUsernameBox, searchEditText;
     Button addLibraryGamesButton, searchGamesButton, alphabetButton;
-    String URL = "https://boardnetapi.000webhostapp.com/api";
+    String URL = "http://boardnetapi.hostingerapp.com/api";
     ProgressDialog progress;
 
     @Override
@@ -92,61 +92,65 @@ public class Games extends AppCompatActivity {
         addLibraryGamesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress = new ProgressDialog(Games.this);
-                progress.setTitle("Please Wait!");
-                progress.setMessage("Adding games");
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.show();
-                progress.setCancelable(false);
-
-                new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put("bgg_username", bggUsernameBox.getText().toString());
-
-                            RequestQueue requestQueue = Volley.newRequestQueue(Games.this);
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                    Request.Method.POST,
-                                    URL + "/games/bgg",
-                                    new JSONObject(params),
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            try {
-                                                if (response.getBoolean("success")) {
-                                                    Toast.makeText(Games.this, "Added " + response.getJSONObject("result").getString("added") + " games.", Toast.LENGTH_LONG).show();
-                                                } else {
-                                                    try {
-                                                        Toast.makeText(Games.this, response.getString("result"), Toast.LENGTH_LONG).show();
-                                                    } catch (JSONException e) {
-                                                        Log.e("Poruka", e.toString());
-                                                        Toast.makeText(Games.this, e.toString(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            } catch (JSONException e) {
-                                                Log.e("Poruka", "User: failed reading");
-                                            }
-                                            progress.dismiss();
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Log.e("Poruka", "Request filed: " + error.toString());
-                                            Toast.makeText(Games.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                            requestQueue.add(jsonObjectRequest);
-                        } catch (Exception e) {
-                            progress.dismiss();
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                addGamesFromBggLibrary();
             }
         });
 
+    }
+
+    private void addGamesFromBggLibrary() {
+        progress = new ProgressDialog(Games.this);
+        progress.setTitle("Please Wait!");
+        progress.setMessage("Adding games");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.show();
+        progress.setCancelable(false);
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("bgg_username", bggUsernameBox.getText().toString());
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(Games.this);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.POST,
+                            URL + "/games/bgg",
+                            new JSONObject(params),
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            Toast.makeText(Games.this, "Added " + response.getJSONObject("result").getString("added") + " games.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            try {
+                                                Toast.makeText(Games.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                            } catch (JSONException e) {
+                                                Log.e("Poruka", e.toString());
+                                                Toast.makeText(Games.this, e.toString(), Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "User: failed reading");
+                                    }
+                                    progress.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Poruka", "Request filed: " + error.toString());
+                                    Toast.makeText(Games.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    progress.dismiss();
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void fillBggUsername() {

@@ -27,7 +27,7 @@ import java.util.Map;
 public class Game extends AppCompatActivity {
     private SharedPreferences preferences;
     private ProgressDialog progress;
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private String bgg_game_id;
     private TextView publishedValueTextView, playersValueTextView, timeValueTextView, ratingValueTextView, rankValueTextView;
     private Button manageLibraryButton, addPlayButton;
@@ -184,7 +184,7 @@ public class Game extends AppCompatActivity {
                     RequestQueue requestQueue = Volley.newRequestQueue(Game.this);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.GET,
-                            URL + "/libraries/delete/user/" + preferences.getString("username","test") + "/game/" + bgg_game_id,
+                            URL + "/libraries/user/" + preferences.getString("username","test") + "/game/" + bgg_game_id,
                             null,
                             new Response.Listener<JSONObject>() {
                                 @Override

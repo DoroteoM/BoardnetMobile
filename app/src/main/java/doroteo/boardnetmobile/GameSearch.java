@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameSearch extends AppCompatActivity {
-    private String URL = "https://boardnetapi.000webhostapp.com/api";
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private ProgressDialog progress;
     private String type, search;
 
