@@ -183,7 +183,7 @@ public class Game extends AppCompatActivity {
                 try {
                     RequestQueue requestQueue = Volley.newRequestQueue(Game.this);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                            Request.Method.GET,
+                            Request.Method.DELETE,
                             URL + "/libraries/user/" + preferences.getString("username","test") + "/game/" + bgg_game_id,
                             null,
                             new Response.Listener<JSONObject>() {

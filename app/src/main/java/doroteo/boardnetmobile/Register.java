@@ -2,6 +2,7 @@ package doroteo.boardnetmobile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
     EditText emailBox, usernameBox, passwordBox, passwordConfirmationBox;
     Button registerButton;
     TextView loginLink;
@@ -69,6 +72,8 @@ public class Register extends AppCompatActivity {
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.show();
         progress.setCancelable(false);
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
 
         new Thread(new Runnable() {
             public void run() {
@@ -95,6 +100,9 @@ public class Register extends AppCompatActivity {
                                         {
                                             Log.e("Poruka", "User: " + response.getString("user"));
                                             Log.e("Poruka", "Username: " + response.getJSONObject("user").getString("username"));
+                                            loginPrefsEditor.putBoolean("saveLogin", true);
+                                            loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
+                                            loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
                                             progress.dismiss();
                                             Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Register.this, Login.class)); //TODO register:username -> login:username

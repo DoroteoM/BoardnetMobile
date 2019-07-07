@@ -51,12 +51,55 @@ public class Friend extends AppCompatActivity {
         friendUsername = getIntent().getStringExtra("username");
 
         this.getUser();
+
+        this.isFriend();
+
         btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 manageFriends();
             }
         });
+    }
+
+    private void isFriend() {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.GET,
+                            URL + "/friends/arefriends/user/" + myUsername + "/friend/" + friendUsername,
+                            null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getBoolean("success")) {
+                                            befriended = response.getBoolean("result");
+                                            if (befriended) btnAddFriend.setText("Remove friend");
+                                        } else {
+                                            Toast.makeText(Friend.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("Poruka", "Error: " + e.toString());
+                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError e) {
+                                    Log.e("Poruka", "Error: " + e.toString());
+                                    Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    Log.e("Poruka", "Error: " + e.toString());
+                }
+            }
+        }).start();
     }
 
     private void manageFriends() {

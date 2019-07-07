@@ -126,7 +126,6 @@ public class Login extends AppCompatActivity {
 
                                     if (saveLoginCheckBox.isChecked()) {
                                         loginPrefsEditor.putBoolean("saveLogin", true);
-                                        loginPrefsEditor.putBoolean("saveLogin", true);
                                         loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
                                         loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
                                     } else {
