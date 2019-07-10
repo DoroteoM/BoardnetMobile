@@ -1,6 +1,7 @@
 package doroteo.boardnetmobile;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,8 +37,8 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Game");
         setContentView(R.layout.activity_game);
+        setTitle("Game");
         preferences = getSharedPreferences("API", MODE_PRIVATE);
         bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         manageLibraryButton = (Button) findViewById(R.id.manageLibraryButton);
@@ -48,6 +49,14 @@ public class Game extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 manageLibrary();
+            }
+        });
+        addPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getBaseContext(), PlayGameMode.class);
+                myIntent.putExtra("bgg_game_id", bgg_game_id);
+                startActivity(myIntent);
             }
         });
     }

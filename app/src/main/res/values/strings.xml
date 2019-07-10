@@ -38,4 +38,8 @@
     <string name="add_to_library">Add to library</string>
     <string name="find_friend_by_name">Find by name</string>
     <string name="find_friend_by_username">Find by username</string>
+    <string name="won">Won</string>
+    <string name="points">Points</string>
+    <string name="minutes">Minutes</string>
+    <string name="duration">Duration</string>
 </resources>
