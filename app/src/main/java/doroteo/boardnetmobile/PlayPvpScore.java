@@ -36,56 +36,44 @@ import java.util.Map;
 
 import doroteo.boardnetmobile.models.Player;
 
-public class PlayPvpScore extends AppCompatActivity {
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
-    private SharedPreferences preferences;
-    private ProgressDialog progress;
-    private Spinner friendsSpinner;
+public class PlayPvpScore extends MainClass {
     private String myUsername, bgg_game_id, playId;
-    private Switch wonSwitch;
-    private EditText pvpPlayerNameEditText, pvpPlayerPointsEditText;
-    private Button addPvpPlayerButton, savePvpPlayButton;
-    private List<Player> players = new ArrayList<Player>();
+//    private Spinner friendsSpinner;
+//    private Switch wonSwitch;
+//    private EditText pvpPlayerNameEditText, pvpPlayerPointsEditText;
+//    private Button addPvpPlayerButton, savePvpPlayButton;
+//    private List<Player> players = new ArrayList<Player>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_pvp_score);
         setTitle("Score");
         preferences = getSharedPreferences("API", MODE_PRIVATE);
+        myUsername = preferences.getString("username", "test");
         bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         playId = getIntent().getStringExtra("playId");
-        myUsername = preferences.getString("username", "test");
-        pvpPlayerNameEditText = (EditText) findViewById(R.id.pvpPlayerNameEditText);
-        pvpPlayerPointsEditText = (EditText) findViewById(R.id.pvpPlayerPointsEditText);
-        friendsSpinner = (Spinner) findViewById(R.id.friendsSpinner);
-        wonSwitch = (Switch) findViewById(R.id.wonSwitch);
-        addPvpPlayerButton = (Button) findViewById(R.id.addPvpPlayerButton);
-        savePvpPlayButton = (Button) findViewById(R.id.savePvpPlayButton);
 
-        getPlayersList();
-        addPvpPlayerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getBaseContext(), PlayPvpNewPlayer.class);
-                myIntent.putExtra("bgg_game_id", bgg_game_id);
-                myIntent.putExtra("playId", playId);
-                startActivity(myIntent);
-            }
-        });
+        this.getFriendList();
+//        pvpPlayerNameEditText = (EditText) findViewById(R.id.pvpPlayerNameEditText);
+//        pvpPlayerPointsEditText = (EditText) findViewById(R.id.pvpPlayerPointsEditText);
+//        friendsSpinner = (Spinner) findViewById(R.id.friendsSpinner);
+//        wonSwitch = (Switch) findViewById(R.id.wonSwitch);
+//        addPvpPlayerButton = (Button) findViewById(R.id.addPvpPlayerButton);
+//        savePvpPlayButton = (Button) findViewById(R.id.savePvpPlayButton);
+//
+//        getPlayersList();
+//        addPvpPlayerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent myIntent = new Intent(getBaseContext(), PlayPvpNewPlayer.class);
+//                myIntent.putExtra("bgg_game_id", bgg_game_id);
+//                myIntent.putExtra("playId", playId);
+//                startActivity(myIntent);
+//            }
+//        });
     }
 
-    private void addPlayer() {
-        Player player = new Player();
-        player.name = pvpPlayerNameEditText.getText().toString();
-        player.username = friendsSpinner.getSelectedItem().toString();
-        if (!pvpPlayerPointsEditText.getText().toString().equals(""))
-            player.points = Integer.parseInt(pvpPlayerPointsEditText.getText().toString());
-        player.won = wonSwitch.isChecked() ? "1" : "0";
-        players.add(player);
-        emptyPlayerForm();
-    }
-
-    private void getPlayersList() {
+    private void getFriendList() {
         progress = new ProgressDialog(PlayPvpScore.this);
         progress.setTitle("Please Wait!");
         progress.setMessage("Loading list");
@@ -100,7 +88,7 @@ public class PlayPvpScore extends AppCompatActivity {
                     RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpScore.this);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.GET,
-                            URL + "/player/play/" + playId,
+                            URL + "/play/" + playId,
                             null,
                             new Response.Listener<JSONObject>() {
                                 @Override
@@ -108,13 +96,14 @@ public class PlayPvpScore extends AppCompatActivity {
                                     try {
                                         if (response.getBoolean("success")) {
                                             if (!response.get("result").equals(null)) {
-                                                JSONArray playersList = response.getJSONArray("result");
+                                                JSONArray playersList = response.getJSONObject("result").getJSONArray("players");
                                                 List<JSONObject> listOfPlayers = new ArrayList<JSONObject>();
                                                 for (int i = 0; i < playersList.length(); i++) {
                                                     listOfPlayers.add(playersList.getJSONObject(i));
                                                 }
                                                 if (listOfPlayers.size() > 0)
-                                                    createList(listOfPlayers);
+//                                                    createList(listOfPlayers);
+                                                progress.dismiss();
                                             }
                                         } else {
                                             Log.e("Poruka", response.getString("result"));
@@ -148,33 +137,23 @@ public class PlayPvpScore extends AppCompatActivity {
         ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
 
         for (JSONObject player : listOfPlayers) {
-            String username, name, surname, playerId, playerName, points, won;
-            playerName = player.get("name").toString();
-            points = player.get("points").toString();
-            playerId = player.get("id").toString();
-            if (playerName.equals("") && !player.get("user").equals("")) {
-                JSONObject user = player.getJSONObject("user");
-                username = (String) user.get("username");
-                name = !user.get("name").equals(null) ? user.get("name").toString() : "";
-                surname = !user.get("surname").equals(null) ? user.get("surname").toString() : "";
-                if (name.equals("") && surname.equals(""))
-                    playerName = username;
-                else
-                    playerName = name + " " + surname;
-            }
+            String name, points, won, playerId, playerScore;
+            playerId = player.getString("id");
+            name =  player.getString("name");
+            won = player.getString("won").equals("1") ? "WON" : "";
+            points = player.get("points") != null ? player.getString("points") + "   " : "";
+            playerScore = name + "\n" + points + won;
 
             Map<String, Object> listItemMap = new HashMap<String, Object>();
+            listItemMap.put("playerScore", playerScore);
             listItemMap.put("playerId", playerId);
-            listItemMap.put("playerName", playerName);
-            if (!points.equals(""))
-                listItemMap.put("points", points);
             itemDataList.add(listItemMap);
         }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(PlayPvpScore.this, itemDataList, R.layout.activity_play_pvp_score,
-                new String[]{"imageId", "playerName", "points", "playerId"}, new int[]{R.id.friendImageView, R.id.pvpPlayerNameListTextView, R.id.pvpPlayerPointsTextView, R.id.pvpPlayerIdTextView});
+                new String[]{"playerScore", "playerId"}, new int[]{R.id.pvpPlayerScoreTextView, R.id.pvpPlayerIdTextView});
 
-        ListView listView = (ListView) findViewById(R.id.playersListView);
+        ListView listView = (ListView) findViewById(R.id.playPvpPlayersListView);
         listView.setAdapter(simpleAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -182,22 +161,138 @@ public class PlayPvpScore extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 HashMap clickItemMap = (HashMap) clickItemObj;
-                String playerId = (String) clickItemMap.get("playerId");
+                Toast.makeText(PlayPvpScore.this, clickItemMap.toString(), Toast.LENGTH_LONG).show();
 
-                Intent myIntent = new Intent(getBaseContext(), PlaySoloScore.class);
-                myIntent.putExtra("bgg_game_id", bgg_game_id);
-                myIntent.putExtra("playerId", playerId);
-                startActivity(myIntent);
+//                Intent myIntent = new Intent(getBaseContext(), Friend.class);
+//                myIntent.putExtra("username", username);
+//                startActivity(myIntent);
             }
         });
     }
 
-    private void emptyPlayerForm() {
-        pvpPlayerNameEditText.setText("");
-        pvpPlayerPointsEditText.setText("");
-        friendsSpinner.setSelection(0);
-        wonSwitch.setChecked(false);
-    }
+//    private void addPlayer() {
+//        Player player = new Player();
+//        player.name = pvpPlayerNameEditText.getText().toString();
+//        player.username = friendsSpinner.getSelectedItem().toString();
+//        if (!pvpPlayerPointsEditText.getText().toString().equals(""))
+//            player.points = Integer.parseInt(pvpPlayerPointsEditText.getText().toString());
+//        player.won = wonSwitch.isChecked() ? "1" : "0";
+//        players.add(player);
+//        emptyPlayerForm();
+//    }
+
+//    private void getPlayersList() {
+//        progress = new ProgressDialog(PlayPvpScore.this);
+//        progress.setTitle("Please Wait!");
+//        progress.setMessage("Loading list");
+//        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progress.show();
+//        progress.setCancelable(false);
+
+//        new Thread(new Runnable() {
+//            public void run() {
+//                try {
+//                    RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpScore.this);
+//                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+//                            Request.Method.GET,
+//                            URL + "/player/play/" + playId,
+//                            null,
+//                            new Response.Listener<JSONObject>() {
+//                                @Override
+//                                public void onResponse(JSONObject response) {
+//                                    try {
+//                                        if (response.getBoolean("success")) {
+//                                            if (!response.get("result").equals(null)) {
+//                                                JSONArray playersList = response.getJSONArray("result");
+//                                                List<JSONObject> listOfPlayers = new ArrayList<JSONObject>();
+//                                                for (int i = 0; i < playersList.length(); i++) {
+//                                                    listOfPlayers.add(playersList.getJSONObject(i));
+//                                                }
+//                                                if (listOfPlayers.size() > 0)
+//                                                    createList(listOfPlayers);
+//                                            }
+//                                        } else {
+//                                            Log.e("Poruka", response.getString("result"));
+//                                            Toast.makeText(PlayPvpScore.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
+//                                        }
+//                                    } catch (JSONException e) {
+//                                        Log.e("Poruka", "Error: " + e);
+//                                        Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+//                                    }
+//                                    progress.dismiss();
+//                                }
+//                            },
+//                            new Response.ErrorListener() {
+//                                @Override
+//                                public void onErrorResponse(VolleyError error) {
+//                                    Log.e("Poruka", "Request filed: " + error.toString());
+//                                    Toast.makeText(PlayPvpScore.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+//                                    progress.dismiss();
+//                                }
+//                            });
+//                    requestQueue.add(jsonObjectRequest);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    progress.dismiss();
+//                }
+//            }
+//        }).start();
+//    }
+
+//    private void createList(List<JSONObject> listOfPlayers) throws JSONException {
+//        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
+//
+//        for (JSONObject player : listOfPlayers) {
+//            String username, name, surname, playerId, playerName, points, won;
+//            playerName = player.get("name").toString();
+//            points = player.get("points").toString();
+//            playerId = player.get("id").toString();
+//            if (playerName.equals("") && !player.get("user").equals("")) {
+//                JSONObject user = player.getJSONObject("user");
+//                username = (String) user.get("username");
+//                name = !user.get("name").equals(null) ? user.get("name").toString() : "";
+//                surname = !user.get("surname").equals(null) ? user.get("surname").toString() : "";
+//                if (name.equals("") && surname.equals(""))
+//                    playerName = username;
+//                else
+//                    playerName = name + " " + surname;
+//            }
+//
+//            Map<String, Object> listItemMap = new HashMap<String, Object>();
+//            listItemMap.put("playerId", playerId);
+//            listItemMap.put("playerName", playerName);
+//            if (!points.equals(""))
+//                listItemMap.put("points", points);
+//            itemDataList.add(listItemMap);
+//        }
+//
+//        SimpleAdapter simpleAdapter = new SimpleAdapter(PlayPvpScore.this, itemDataList, R.layout.activity_play_pvp_score,
+//                new String[]{"imageId", "playerName", "points", "playerId"}, new int[]{R.id.friendImageView, R.id.pvpPlayerNameListTextView, R.id.pvpPlayerPointsTextView, R.id.pvpPlayerIdTextView});
+//
+//        ListView listView = (ListView) findViewById(R.id.playersListView);
+//        listView.setAdapter(simpleAdapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+//                Object clickItemObj = adapterView.getAdapter().getItem(index);
+//                HashMap clickItemMap = (HashMap) clickItemObj;
+//                String playerId = (String) clickItemMap.get("playerId");
+//
+//                Intent myIntent = new Intent(getBaseContext(), PlaySoloScore.class);
+//                myIntent.putExtra("bgg_game_id", bgg_game_id);
+//                myIntent.putExtra("playerId", playerId);
+//                startActivity(myIntent);
+//            }
+//        });
+//    }
+
+//    private void emptyPlayerForm() {
+//        pvpPlayerNameEditText.setText("");
+//        pvpPlayerPointsEditText.setText("");
+//        friendsSpinner.setSelection(0);
+//        wonSwitch.setChecked(false);
+//    }
 
     //Back button
     @Override

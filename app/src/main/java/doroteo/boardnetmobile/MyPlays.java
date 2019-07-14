@@ -37,6 +37,7 @@ public class MyPlays extends MainClass {
         setContentView(R.layout.activity_my_plays);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
         myUsername = preferences.getString("username", "test");
+        setTitle("My plays");
         
         getPlaysList();
     }
@@ -130,8 +131,6 @@ public class MyPlays extends MainClass {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 HashMap clickItemMap = (HashMap) clickItemObj;
-                Toast.makeText(MyPlays.this, clickItemMap.toString(), Toast.LENGTH_LONG).show();
-
                 String playId = (String) clickItemMap.get("playId");
                 String mode = (String) clickItemMap.get("mode");
                 Intent myIntent = null;
