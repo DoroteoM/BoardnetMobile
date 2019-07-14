@@ -74,10 +74,10 @@ public class PlayPvpScore extends MainClass {
                                     try {
                                         if (response.getBoolean("success")) {
                                             if (!response.get("result").equals(null)) {
-                                                JSONArray friendsList = response.getJSONObject("result").getJSONArray("players");
+                                                JSONArray playersList = response.getJSONObject("result").getJSONArray("players");
                                                 List<JSONObject> listOfUsers = new ArrayList<JSONObject>();
-                                                for (int i = 0; i < friendsList.length(); i++) {
-                                                    listOfUsers.add(friendsList.getJSONObject(i));
+                                                for (int i = 0; i < playersList.length(); i++) {
+                                                    listOfUsers.add(playersList.getJSONObject(i));
                                                 }
                                                 if (listOfUsers.size() > 0)
                                                     createList(listOfUsers);
