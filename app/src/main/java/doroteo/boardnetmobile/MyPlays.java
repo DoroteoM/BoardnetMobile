@@ -2,6 +2,7 @@ package doroteo.boardnetmobile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -69,6 +71,7 @@ public class MyPlays extends MainClass {
                                                 }
                                                 if (listOfPlays.size() > 0)
                                                     fillPlayListView(listOfPlays);
+                                                progress.dismiss();
                                             }
                                         } else {
                                             Log.e("Poruka", response.getString("result"));
@@ -99,34 +102,46 @@ public class MyPlays extends MainClass {
     }
 
     private void fillPlayListView(List<JSONObject> listOfPlays) throws JSONException {
-        ArrayList<String> itemDataList = new ArrayList<String>();
+        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
 
         for (JSONObject play : listOfPlays) {
-            String game, mode, time;
+            String game, mode, time, title;
             game = play.getJSONObject("game").getString("name");
             mode = play.getString("mode");
             time = play.getString("created_at");
+            title =  game + " (" + mode + ") \n" + time;
 
-            itemDataList.add(game + " (" + mode + ") " + time);
+
+            Map<String, Object> listItemMap = new HashMap<String, Object>();
+            listItemMap.put("title", title);
+            listItemMap.put("playId", play.getString("id"));
+            listItemMap.put("mode", mode);
+            itemDataList.add(listItemMap);
         }
 
-        ArrayAdapter<String> adapterNavigationList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemDataList);
+        SimpleAdapter simpleAdapter = new SimpleAdapter(MyPlays.this, itemDataList, R.layout.activity_my_plays,
+                new String[]{"title", "playId", "mode"}, new int[]{R.id.myPlayTitleTextView, R.id.myPlayIdTextView, R.id.myPlayModeTextView});
 
-        ListView listView = (ListView)findViewById(R.id.playsListView);
-        listView.setAdapter(adapterNavigationList);
+        ListView listView = (ListView) findViewById(R.id.myPlaysListView);
+        listView.setAdapter(simpleAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
-                Toast.makeText(MyPlays.this, clickItemObj.toString(), Toast.LENGTH_LONG).show();
-//                if (clickItemObj.equals("Profile"))
-//                {
-//                    Intent intent = new Intent(MyPlays.this, Profile.class);
-//                    startActivity(intent);
-//                }
+                HashMap clickItemMap = (HashMap) clickItemObj;
+                Toast.makeText(MyPlays.this, clickItemMap.toString(), Toast.LENGTH_LONG).show();
+
+                String playId = (String) clickItemMap.get("playId");
+                String mode = (String) clickItemMap.get("mode");
+                Intent myIntent = null;
+                if (mode.equals("SOLO"))
+                    myIntent = new Intent(getBaseContext(), PlaySoloScore.class);
+                else if (mode.equals("PVP"))
+                    myIntent = new Intent(getBaseContext(), PlayPvpScore.class);
+                myIntent.putExtra("playId", playId);
+                startActivity(myIntent);
             }
         });
-
     }
 }
