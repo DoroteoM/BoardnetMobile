@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void mainListView()
     {
-        String[] navigationTo = { "Profile", "Friends", "Library", "Games", "Log Out"};
+        String[] navigationTo = { "Profile", "Friends", "Library", "My Plays", "All Games", "Log Out"};
 
         ArrayList<String> itemDataList = new ArrayList<String>();
 
@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, Profile.class);
                     startActivity(intent);
                 }
-                else if (clickItemObj.equals("Games"))
+                else if (clickItemObj.equals("Friends"))
                 {
-                    Intent intent = new Intent(MainActivity.this, Games.class);
+                    Intent intent = new Intent(MainActivity.this, Friends.class);
                     startActivity(intent);
                 }
                 else if (clickItemObj.equals("Library"))
@@ -58,9 +58,14 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, Library.class);
                     startActivity(intent);
                 }
-                else if (clickItemObj.equals("Friends"))
+                else if (clickItemObj.equals("My Plays"))
                 {
-                    Intent intent = new Intent(MainActivity.this, Friends.class);
+                    Intent intent = new Intent(MainActivity.this, MyPlays.class);
+                    startActivity(intent);
+                }
+                else if (clickItemObj.equals("All Games"))
+                {
+                    Intent intent = new Intent(MainActivity.this, Games.class);
                     startActivity(intent);
                 }
                 else if (clickItemObj.equals("Log Out"))
