@@ -128,7 +128,7 @@ public class Friends extends AppCompatActivity {
             }
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(Friends.this, itemDataList, R.layout.activity_friend_search,
+        SimpleAdapter simpleAdapter = new SimpleAdapter(Friends.this, itemDataList, R.layout.layout_friends,
                 new String[]{"imageId", "username", "name"}, new int[]{R.id.friendImageView, R.id.friendSearchUsernameTextView, R.id.friendSearchNameTextView});
 
         ListView listView = (ListView) findViewById(R.id.friendListView);
