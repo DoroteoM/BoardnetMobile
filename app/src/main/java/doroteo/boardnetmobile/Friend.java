@@ -69,7 +69,7 @@ public class Friend extends AppCompatActivity {
                     RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.GET,
-                            URL + "/friends/arefriends/user/" + myUsername + "/friend/" + friendUsername,
+                            URL + "/friends/are-friends/user/" + myUsername + "/friend/" + friendUsername,
                             null,
                             new Response.Listener<JSONObject>() {
                                 @Override

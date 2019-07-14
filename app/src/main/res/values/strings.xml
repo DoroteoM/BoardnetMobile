@@ -42,4 +42,7 @@
     <string name="points">Points</string>
     <string name="minutes">Minutes</string>
     <string name="duration">Duration</string>
+    <string name="addPlayer">Add player</string>
+    <string name="friend">Friend</string>
+    <string name="remove">Remove</string>
 </resources>

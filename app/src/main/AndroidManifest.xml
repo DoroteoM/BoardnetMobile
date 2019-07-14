@@ -12,10 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PlayPvpNewPlayer">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PlayPvpScore" />
+        </activity>
+        <activity android:name=".PlayPvpScore">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PlayGameMode" />
+        </activity>
         <activity android:name=".PlaySoloScore">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".PlayGameMode" />
         </activity>
         <activity android:name=".PlayGameMode">
             <meta-data

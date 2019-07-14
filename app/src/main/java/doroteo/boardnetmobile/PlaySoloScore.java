@@ -44,7 +44,7 @@ public class PlaySoloScore extends AppCompatActivity {
         bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         myUsername = preferences.getString("username", "test");
         gameMode = "SOLO";
-        pointsEditText = (EditText) findViewById(R.id.pointsEditText);
+        pointsEditText = (EditText) findViewById(R.id.pvpPlayerPointsEditText);
         durationEditText = (EditText) findViewById(R.id.durationEditText);
         wonSwitch = (Switch) findViewById(R.id.wonSwitch);
         saveSoloPlayButton = (Button) findViewById(R.id.saveSoloPlayButton);
@@ -120,8 +120,10 @@ public class PlaySoloScore extends AppCompatActivity {
         params.put("play_id", playId.toString());
         params.put("username", myUsername);
         params.put("won", won);
-        if (!durationEditText.getText().toString().equals(""))
+        if (!pointsEditText.getText().toString().equals(""))
             params.put("points", pointsEditText.getText().toString());
+        if (!durationEditText.getText().toString().equals(""))
+            params.put("duration", durationEditText.getText().toString());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 URL + "/player",

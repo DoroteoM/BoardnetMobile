@@ -4,7 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlaySoloScore">
+    tools:context=".PlayPvpNewPlayer">
+
+    <TextView
+        android:id="@+id/pvpPlayerNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/name"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/pvpPlayerNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:ems="10"
+        android:gravity="right"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pvpPlayerNameTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/wonSwitch"
@@ -12,14 +43,14 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/won"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/friendTextView" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -38,8 +69,8 @@
         android:id="@+id/pvpPlayerPointsEditText"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginLeft="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
@@ -51,49 +82,35 @@
         app:layout_constraintTop_toBottomOf="@+id/wonSwitch" />
 
     <TextView
-        android:id="@+id/durationTextView"
+        android:id="@+id/friendTextView"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:text="@string/duration"
+        android:text="@string/friend"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pointsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/pvpPlayerNameTextView" />
 
-    <EditText
-        android:id="@+id/durationEditText"
+    <Spinner
+        android:id="@+id/friendsSpinner"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginStart="150dp"
-        android:layout_marginLeft="150dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:gravity="right"
-        android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/minutesTextView"
-        app:layout_constraintStart_toEndOf="@+id/durationTextView"
-        app:layout_constraintTop_toBottomOf="@+id/pvpPlayerPointsEditText" />
-
-    <TextView
-        android:id="@+id/minutesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="min"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
+        android:foregroundGravity="right"
+        android:gravity="right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pvpPlayerPointsEditText" />
+        app:layout_constraintStart_toEndOf="@+id/friendTextView"
+        app:layout_constraintTop_toBottomOf="@+id/pvpPlayerNameEditText" />
 
     <Button
-        android:id="@+id/saveSoloPlayButton"
+        android:id="@+id/savePlayerButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -106,5 +123,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/removePlayerButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/remove"
+        app:layout_constraintBottom_toTopOf="@+id/savePlayerButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
