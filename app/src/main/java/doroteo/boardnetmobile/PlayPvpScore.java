@@ -111,41 +111,43 @@ public class PlayPvpScore extends MainClass {
     }
 
     private void createList(List<JSONObject> listOfUsers) throws JSONException {
-//        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
-//
-//        for (JSONObject user : listOfUsers) {
-//            String playerId, name, won, points, score;
-//            playerId = user.getString("id");
-//            name = !user.getString("name").equals("null") ? user.getString("name"): "";
-//            points = !user.getString("points").equals("null") ? user.getString("points") + "   " : "";
-//            won = user.getString("won").equals("1") ? "WINNER" : "";
-//            score = points + won;
-//
-//            Map<String, Object> listItemMap = new HashMap<String, Object>();
-//            listItemMap.put("playerId", playerId);
-//            listItemMap.put("name", name);
-//            listItemMap.put("score", score);
-//            itemDataList.add(listItemMap);
-//        }
-//
-//        SimpleAdapter simpleAdapter = new SimpleAdapter(PlayPvpScore.this, itemDataList, R.layout.activity_friend_search,
-//                new String[]{"name", "score", "playId"}, new int[]{R.id.friendSearchNameTextView, R.id.friendSearchUsernameTextView, R.id.friendIdTextView});
-//
-//        ListView listView = (ListView) findViewById(R.id.friendListView);
-//        listView.setAdapter(simpleAdapter);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-//                Object clickItemObj = adapterView.getAdapter().getItem(index);
-//                HashMap clickItemMap = (HashMap) clickItemObj;
+        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
+
+        for (JSONObject user : listOfUsers) {
+            String playerId, name, won, points, score;
+            playerId = user.getString("id");
+            name = !user.getString("name").equals("null") ? user.getString("name"): "";
+            points = !user.getString("points").equals("null") ? user.getString("points") + "   " : "";
+            won = user.getString("won").equals("1") ? "WINNER" : "";
+            score = points + won;
+
+            Map<String, Object> listItemMap = new HashMap<String, Object>();
+            listItemMap.put("playerId", playerId);
+            listItemMap.put("name", name);
+            listItemMap.put("score", score);
+            itemDataList.add(listItemMap);
+        }
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(PlayPvpScore.this, itemDataList, R.layout.layout_players,
+                new String[]{"name", "score", "playId"}, new int[]{R.id.playerNameTextView, R.id.playerScoreTextView, R.id.playerIdTextView});
+
+        ListView listView = (ListView) findViewById(R.id.playerListView);
+        listView.setAdapter(simpleAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                Object clickItemObj = adapterView.getAdapter().getItem(index);
+                HashMap clickItemMap = (HashMap) clickItemObj;
+                Toast.makeText(PlayPvpScore.this, clickItemMap.toString(), Toast.LENGTH_LONG).show();
+
 //                String username = (String) clickItemMap.get("username");
 //
 //                Intent myIntent = new Intent(getBaseContext(), Friend.class);
 //                myIntent.putExtra("username", username);
 //                startActivity(myIntent);
-//            }
-//        });
+            }
+        });
     }
 
 
