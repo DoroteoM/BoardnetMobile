@@ -30,12 +30,12 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:autofillHints="@string/search"
-        app:layout_constraintBottom_toTopOf="@id/findByNameButton"
+        app:layout_constraintBottom_toTopOf="@id/addPlayerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/findByNameButton"
+        android:id="@+id/addPlayerButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -45,11 +45,11 @@
         android:layout_marginBottom="8dp"
         android:text="@string/find_friend_by_name"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/findByUsernameButton"
+        app:layout_constraintEnd_toStartOf="@+id/savePvpPlayButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/findByUsernameButton"
+        android:id="@+id/savePvpPlayButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -60,6 +60,6 @@
         android:text="@string/find_friend_by_username"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/findByNameButton" />
+        app:layout_constraintStart_toEndOf="@+id/addPlayerButton" />
 
 </android.support.constraint.ConstraintLayout>

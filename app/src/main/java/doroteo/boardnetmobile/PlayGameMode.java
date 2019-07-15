@@ -73,7 +73,9 @@ public class PlayGameMode extends AppCompatActivity {
                 }
                 else if (clickItemObj.equals("PvP"))
                 {
-                    createPlay();
+                    Intent myIntent = new Intent(getBaseContext(), PlayPvpScore.class);
+                    myIntent.putExtra("bgg_game_id", bgg_game_id);
+                    startActivity(myIntent);
                 }
                 else if (clickItemObj.equals("Team"))
                 {
@@ -89,46 +91,6 @@ public class PlayGameMode extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void createPlay() {
-        gameMode = "PVP";
-        RequestQueue requestQueue = Volley.newRequestQueue(PlayGameMode.this);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("bgg_game_id", bgg_game_id);
-        params.put("username", myUsername);
-        params.put("mode", gameMode);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                URL + "/play",
-                new JSONObject(params),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            if (response.getString("success").equals("true")) {
-                                playId = response.getJSONObject("result").getInt("id");
-                                Intent myIntent = new Intent(getBaseContext(), PlayPvpScore.class);
-                                myIntent.putExtra("bgg_game_id", bgg_game_id);
-                                myIntent.putExtra("playId", playId.toString());
-                                startActivity(myIntent);
-                            } else {
-                                Toast.makeText(PlayGameMode.this, "Play: " + response.getString("result"), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            Log.e("Poruka", e.toString());
-                            Toast.makeText(PlayGameMode.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError e) {
-                        Log.e("Poruka", "Error: " + e.toString());
-                        Toast.makeText(PlayGameMode.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
-        requestQueue.add(jsonObjectRequest);
     }
 
     //Back button

@@ -66,7 +66,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
         savePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPlayer();
+                savePlayer();
             }
         });
     }
@@ -84,7 +84,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
                             try {
                                 if (response.getBoolean("success")) {
                                     if (!response.get("result").equals(null)) {
-                                        Boolean won = response.getJSONObject("result").getString("won").equals("true") ? true : false;
+                                        Boolean won = response.getJSONObject("result").getString("won").equals("1") ? true : false;
                                         pvpPlayerNameEditText.setText(response.getJSONObject("result").getString("name"));
                                         pvpPlayerPointsEditText.setText(response.getJSONObject("result").getString("points"));
                                         wonSwitch.setChecked(won);
@@ -119,7 +119,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpNewPlayer.this);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
-                    URL + "/friends/user/" + myUsername,
+                    URL + "/play/friends-not-in-play/" + playId,
                     null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -129,9 +129,9 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
                                     if (!response.get("result").equals(null)) {
                                         List<String> friendsArray =  new ArrayList<String>();
                                         JSONArray friendsList = response.getJSONArray("result");
-                                            friendsArray.add("");
+                                        friendsArray.add("");
                                         for (int i = 0; i < friendsList.length(); i++) {
-                                            friendsArray.add(friendsList.getJSONObject(i).getJSONObject("friend").getString("username"));
+                                            friendsArray.add(friendsList.getJSONObject(i).getString("username"));
                                         }
                                         if (!playerUsername.equals(""))
                                             friendsArray.add(playerUsername);
@@ -163,18 +163,22 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
         }
     }
 
-    private void addPlayer() {
-        String won = wonSwitch.isChecked() ? "1" : "0";
+    private void savePlayer() {
         RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpNewPlayer.this);
         Map<String, String> params = new HashMap<String, String>();
+        if (!pvpPlayerNameEditText.getText().toString().equals(""))
+            params.put("name", pvpPlayerNameEditText.getText().toString());
+        if (!friendsSpinner.getSelectedItem().toString().equals(""))
+            params.put("username", friendsSpinner.getSelectedItem().toString());
+        if (!pvpPlayerPointsEditText.getText().toString().equals(""))
+            params.put("points", pvpPlayerPointsEditText.getText().toString());
+        params.put("won", wonSwitch.isChecked() ? "1" : "0");
         params.put("play_id", playId);
-        params.put("username", friendsSpinner.getSelectedItem().toString());
-        params.put("won", won);
         if (!pvpPlayerPointsEditText.getText().toString().equals(""))
             params.put("points", pvpPlayerPointsEditText.getText().toString());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                URL + "/player",
+                Request.Method.PUT,
+                URL + "/player/" + playerId,
                 new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override

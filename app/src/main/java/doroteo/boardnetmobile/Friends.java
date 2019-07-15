@@ -149,8 +149,8 @@ public class Friends extends AppCompatActivity {
     }
 
     private void search() {
-        findByNameButton = (Button) findViewById(R.id.findByNameButton);
-        findByUsernameButton = (Button) findViewById(R.id.findByUsernameButton);
+        findByNameButton = (Button) findViewById(R.id.addPlayerButton);
+        findByUsernameButton = (Button) findViewById(R.id.savePvpPlayButton);
         findByNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

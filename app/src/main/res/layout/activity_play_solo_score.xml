@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/pointsTextView"
+        android:id="@+id/pvpPlayerPointsTextView"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -47,7 +47,7 @@
         android:gravity="right"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pointsTextView"
+        app:layout_constraintStart_toEndOf="@+id/pvpPlayerPointsTextView"
         app:layout_constraintTop_toBottomOf="@+id/wonSwitch" />
 
     <TextView
@@ -61,7 +61,7 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pointsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/pvpPlayerPointsTextView" />
 
     <EditText
         android:id="@+id/durationEditText"

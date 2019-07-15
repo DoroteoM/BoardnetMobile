@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@+id/friendTextView" />
 
     <TextView
-        android:id="@+id/pointsTextView"
+        android:id="@+id/pvpPlayerPointsTextView"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -78,7 +78,7 @@
         android:gravity="right"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pointsTextView"
+        app:layout_constraintStart_toEndOf="@+id/pvpPlayerPointsTextView"
         app:layout_constraintTop_toBottomOf="@+id/wonSwitch" />
 
     <TextView

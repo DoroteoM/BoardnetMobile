@@ -38,6 +38,11 @@ import doroteo.boardnetmobile.models.Player;
 
 public class PlayPvpScore extends MainClass {
     private String myUsername, bgg_game_id, playId;
+    private EditText pvpPlayerNameEditText, pvpPlayerPointsEditText;
+    private Spinner friendsSpinner;
+    private Switch wonSwitch;
+    private Button addPlayerButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,65 @@ public class PlayPvpScore extends MainClass {
         bgg_game_id = getIntent().getStringExtra("bgg_game_id");
         playId = getIntent().getStringExtra("playId");
 
-        this.getFriendList();
+        pvpPlayerNameEditText = findViewById(R.id.pvpPlayerNameEditText);
+        pvpPlayerPointsEditText = findViewById(R.id.pvpPlayerPointsEditText);
+        friendsSpinner = findViewById(R.id.friendsSpinner);
+        wonSwitch = findViewById(R.id.wonSwitch);
+        addPlayerButton = findViewById(R.id.addPlayerButton);
+
+        if (playId == null)
+            this.createPlay();
+        else
+            this.getFriendList();
+
+        fillSpinner();
+
+        addPlayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pvpPlayerNameEditText.getText().equals("") || !friendsSpinner.getSelectedItem().toString().equals("")) {
+                    addPlayer();
+                }
+                else
+                    Toast.makeText(PlayPvpScore.this, "You need to enter player name or select friend", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void createPlay() {
+        RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpScore.this);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("bgg_game_id", bgg_game_id);
+        params.put("username", myUsername);
+        params.put("mode", "PVP");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                URL + "/play",
+                new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.getString("success").equals("true")) {
+                                playId = response.getJSONObject("result").getString("id");
+                                getFriendList();
+                            } else {
+                                Toast.makeText(PlayPvpScore.this, "Play: " + response.getString("result"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Poruka", e.toString());
+                            Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError e) {
+                        Log.e("Poruka", "Error: " + e.toString());
+                        Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void getFriendList() {
@@ -139,17 +202,113 @@ public class PlayPvpScore extends MainClass {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 HashMap clickItemMap = (HashMap) clickItemObj;
-                Toast.makeText(PlayPvpScore.this, clickItemMap.toString(), Toast.LENGTH_LONG).show();
-
-//                String username = (String) clickItemMap.get("username");
-//
-//                Intent myIntent = new Intent(getBaseContext(), Friend.class);
-//                myIntent.putExtra("username", username);
-//                startActivity(myIntent);
+                String playerId = clickItemMap.get("playerId").toString();
+                finish();
+                Intent myIntent = new Intent(getBaseContext(), PlayPvpNewPlayer.class);
+                myIntent.putExtra("playId", playId);
+                myIntent.putExtra("playerId", playerId);
+                myIntent.putExtra("bgg_game_id", bgg_game_id);
+                startActivity(myIntent);
             }
         });
     }
 
+    private void addPlayer() {
+        RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpScore.this);
+        Map<String, String> params = new HashMap<String, String>();
+        if (!pvpPlayerNameEditText.getText().toString().equals(""))
+            params.put("name", pvpPlayerNameEditText.getText().toString());
+        if (!friendsSpinner.getSelectedItem().toString().equals(""))
+            params.put("username", friendsSpinner.getSelectedItem().toString());
+        if (!pvpPlayerPointsEditText.getText().toString().equals(""))
+            params.put("points", pvpPlayerPointsEditText.getText().toString());
+        params.put("won", wonSwitch.isChecked() ? "1" : "0");
+        params.put("play_id", playId);
+        if (!pvpPlayerPointsEditText.getText().toString().equals(""))
+            params.put("points", pvpPlayerPointsEditText.getText().toString());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                URL + "/player",
+                new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.getString("success").equals("true")) {
+                                Toast.makeText(PlayPvpScore.this, "Player stats saved", Toast.LENGTH_LONG).show();
+                                emptyPlayerForm();
+                                getFriendList();
+                            } else {
+                                Toast.makeText(PlayPvpScore.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Poruka", e.toString());
+                            Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError e) {
+                        Log.e("Poruka", "Error: " + e.toString());
+                        Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void fillSpinner() {
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpScore.this);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    URL + "/play/friends-not-in-play/" + playId,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (response.getBoolean("success")) {
+                                    if (!response.get("result").equals(null)) {
+                                        List<String> friendsArray =  new ArrayList<String>();
+                                        JSONArray friendsList = response.getJSONArray("result");
+                                        friendsArray.add("");
+                                        for (int i = 0; i < friendsList.length(); i++) {
+                                            friendsArray.add(friendsList.getJSONObject(i).getString("username"));
+                                        }
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(PlayPvpScore.this, android.R.layout.simple_spinner_item, friendsArray);
+                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        friendsSpinner.setAdapter(adapter);
+                                    }
+                                } else {
+                                    Log.e("Poruka", response.getString("result"));
+                                    Toast.makeText(PlayPvpScore.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                Log.e("Poruka", "Error: " + e);
+                                Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Poruka", "Request filed: " + error.toString());
+                            Toast.makeText(PlayPvpScore.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void emptyPlayerForm() {
+        pvpPlayerNameEditText.setText("");
+        pvpPlayerPointsEditText.setText("");
+        friendsSpinner.setSelection(0);
+        wonSwitch.setChecked(false);
+    }
 
     //Back button
     @Override
