@@ -87,10 +87,21 @@ public class MyPlays extends MainClass {
                             },
                             new Response.ErrorListener() {
                                 @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("Poruka", "Request filed: " + error.toString());
-                                    Toast.makeText(MyPlays.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
-                                    progress.dismiss();
+                                public void onErrorResponse(VolleyError e) {
+                                    if (e.networkResponse.statusCode == 404) {
+                                        Toast.makeText(MyPlays.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
+                                    } else if (e.networkResponse.statusCode == 401) {
+                                        Toast.makeText(MyPlays.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                        finish();
+                                        Intent myIntent = new Intent(getBaseContext(), Login.class);
+                                        startActivity(myIntent);
+                                    } else if (e.networkResponse.statusCode == 403) {
+                                        Toast.makeText(MyPlays.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
+                                    } else if (e.networkResponse.statusCode == 500) {
+                                        Toast.makeText(MyPlays.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(MyPlays.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             }) {
                         @Override
