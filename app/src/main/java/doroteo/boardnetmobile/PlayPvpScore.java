@@ -64,7 +64,6 @@ public class PlayPvpScore extends MainClass {
         else
             this.getFriendList();
 
-        fillSpinner();
 
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +144,7 @@ public class PlayPvpScore extends MainClass {
                                                 if (listOfUsers.size() > 0)
                                                     createList(listOfUsers);
                                             }
+                                            fillSpinner();
                                         } else {
                                             Log.e("Poruka", response.getString("result"));
                                             Toast.makeText(PlayPvpScore.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();

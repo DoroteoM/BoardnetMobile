@@ -18,33 +18,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Below layout xml is used for each ListView's item.-->
-    <RelativeLayout
-        android:id="@+id/gameListItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/gameImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"/>
-
-        <TextView
-            android:id="@+id/gameNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/gameImageView"/>
-
-        <TextView
-            android:id="@+id/bggGameIdTextView"
-            android:visibility="gone"
-            android:layout_height="0dp"
-            android:layout_width="0dp" />
-
-    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

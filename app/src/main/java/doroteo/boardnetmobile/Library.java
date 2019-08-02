@@ -3,11 +3,16 @@ package doroteo.boardnetmobile;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -23,6 +28,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +40,7 @@ import java.util.Map;
 public class Library extends AppCompatActivity {
     private String URL = "http://boardnetapi.hostingerapp.com/api";
     private SharedPreferences preferences;
-    private ProgressDialog progress;
+    private ProgressDialog progress, progress2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +79,11 @@ public class Library extends AppCompatActivity {
                                             for (int i = 0; i < gameList.length(); i++) {
                                                 listOfGames.add(gameList.getJSONObject(i));
                                             }
-                                            createList(listOfGames);
+                                            new CreateList().execute(listOfGames);
+
                                         }
                                     } catch (JSONException e) {
-                                        Log.e("Poruka", "GameSearch: " + e);
+                                        Log.e("Poruka", "Library: " + e.getMessage());
                                     }
                                     progress.dismiss();
                                 }
@@ -95,38 +105,88 @@ public class Library extends AppCompatActivity {
         }).start();
     }
 
-
-    private void createList(List<JSONObject> listOfGames) throws JSONException {
-        ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
-
-        for (JSONObject game : listOfGames) {
-            String bgg_game_id = (String) game.get("bgg_game_id");
-            String name = (String) game.get("name");
-
-            Map<String, Object> listItemMap = new HashMap<String, Object>();
-            listItemMap.put("imageId", R.mipmap.ic_launcher);
-            listItemMap.put("bgg_game_id", bgg_game_id);
-            listItemMap.put("name", name);
-            itemDataList.add(listItemMap);
+    private class CreateList extends AsyncTask<List<JSONObject>, Void, ArrayList<Map<String, Object>>> {
+        @Override
+        protected void onPreExecute() {
+            progress2 = new ProgressDialog(Library.this);
+            progress2.setTitle("Please Wait!");
+            progress2.setMessage("Loading list");
+            progress2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress2.show();
+            progress2.setCancelable(false);
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(Library.this, itemDataList, R.layout.activity_game_search,
-                new String[]{"imageId", "bgg_game_id", "name"}, new int[]{R.id.gameImageView, R.id.bggGameIdTextView, R.id.gameNameTextView});
+        @Override
+        protected ArrayList<Map<String, Object>> doInBackground(List<JSONObject>... listOfGames) {
+            ArrayList<Map<String, Object>> itemDataList = new ArrayList<Map<String, Object>>();
 
-        ListView listView = (ListView) findViewById(R.id.gameListView);
-        listView.setAdapter(simpleAdapter);
+            String name = null;
+            String bgg_game_id = null;
+            URL imageURL = null;
+            Bitmap bmp = null;
+            for (JSONObject game : listOfGames[0]) {
+                try {
+                    bgg_game_id = game.getString("bgg_game_id");
+                    name = game.getString("name");
+                    imageURL = new URL(game.getString("thumbnail"));
+                    bmp = BitmapFactory.decodeStream(imageURL.openStream());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                Object clickItemObj = adapterView.getAdapter().getItem(index);
-                HashMap clickItemMap = (HashMap) clickItemObj;
-                String bggGameId = (String) clickItemMap.get("bgg_game_id");
 
-                Intent myIntent = new Intent(getBaseContext(), Game.class);
-                myIntent.putExtra("bgg_game_id", bggGameId);
-                startActivity(myIntent);
+                Map<String, Object> listItemMap = new HashMap<String, Object>();
+//            listItemMap.put("imageId", R.mipmap.ic_launcher);
+                listItemMap.put("image", bmp);
+                listItemMap.put("bgg_game_id", bgg_game_id);
+                listItemMap.put("name", name);
+                itemDataList.add(listItemMap);
             }
-        });
+
+            return itemDataList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Map<String, Object>> itemDataList) {
+
+            SimpleAdapter simpleAdapter = new SimpleAdapter(Library.this, itemDataList, R.layout.layout_games,
+                    new String[]{"image", "name", "bgg_game_id"}, new int[]{R.id.gameImageView, R.id.gameNameTextView, R.id.bggIdTextView});
+
+            simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder(){
+                @Override
+                public boolean setViewValue(View view, Object data, String textRepresentation) {
+                    if( (view instanceof ImageView) & (data instanceof Bitmap) ) {
+                        ImageView iv = (ImageView) view;
+                        Bitmap bm = (Bitmap) data;
+                        iv.setImageBitmap(bm);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            ListView listView = (ListView) findViewById(R.id.gameListView);
+            listView.setAdapter(simpleAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                    Object clickItemObj = adapterView.getAdapter().getItem(index);
+                    HashMap clickItemMap = (HashMap) clickItemObj;
+                    String bggGameId = (String) clickItemMap.get("bgg_game_id");
+
+                    Intent myIntent = new Intent(getBaseContext(), Game.class);
+                    myIntent.putExtra("bgg_game_id", bggGameId);
+                    startActivity(myIntent);
+                }
+            });
+
+            progress2.dismiss();
+        }
     }
+
 }

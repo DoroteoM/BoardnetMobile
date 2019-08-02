@@ -91,11 +91,8 @@ public class Register extends AppCompatActivity {
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-                                    Log.e("Poruka", "Success: " + response.toString());
-                                    //Toast.makeText(Register.this, "Registration Successful", Toast.LENGTH_LONG).show();
                                     try
                                     {
-                                        //ako je success = true znaci da je registracija uspjela
                                         if (response.getString("success").equals("true"))
                                         {
                                             Log.e("Poruka", "User: " + response.getString("user"));
@@ -155,8 +152,8 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     Log.e("Poruka","Error: " + error.toString());
-                                    progress.dismiss();
                                     Toast.makeText(Register.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
                                 }
                             });
                     requestQueue.add(jsonObjectRequest);
