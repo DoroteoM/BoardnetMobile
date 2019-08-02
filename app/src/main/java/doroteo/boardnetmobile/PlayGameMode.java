@@ -47,46 +47,37 @@ public class PlayGameMode extends AppCompatActivity {
     }
 
     private void gameModeList() {
-        String[] navigationTo = { "Solo", "PvP"}; //, "Team", "Co-op", "Master"
+        String[] navigationTo = {"Solo", "PvP"}; //, "Team", "Co-op", "Master"
 
         ArrayList<String> itemDataList = new ArrayList<String>();
 
         int navigationLen = navigationTo.length;
-        for(int i =0; i < navigationLen; i++) {
+        for (int i = 0; i < navigationLen; i++) {
             itemDataList.add(navigationTo[i]);
         }
 
         ArrayAdapter<String> adapterNavigationList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemDataList);
 
-        ListView listView = (ListView)findViewById(R.id.gameModeListView);
+        ListView listView = (ListView) findViewById(R.id.gameModeListView);
         listView.setAdapter(adapterNavigationList);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
-                if (clickItemObj.equals("Solo"))
-                {
+                if (clickItemObj.equals("Solo")) {
                     Intent myIntent = new Intent(getBaseContext(), PlaySoloScore.class);
                     myIntent.putExtra("bgg_game_id", bgg_game_id);
                     startActivity(myIntent);
-                }
-                else if (clickItemObj.equals("PvP"))
-                {
+                } else if (clickItemObj.equals("PvP")) {
                     Intent myIntent = new Intent(getBaseContext(), PlayPvpScore.class);
                     myIntent.putExtra("bgg_game_id", bgg_game_id);
                     startActivity(myIntent);
-                }
-                else if (clickItemObj.equals("Team"))
-                {
+                } else if (clickItemObj.equals("Team")) {
                     Toast.makeText(PlayGameMode.this, "Error: " + clickItemObj.toString(), Toast.LENGTH_LONG).show();
-                }
-                else if (clickItemObj.equals("Co-op"))
-                {
+                } else if (clickItemObj.equals("Co-op")) {
                     Toast.makeText(PlayGameMode.this, "Error: " + clickItemObj.toString(), Toast.LENGTH_LONG).show();
-                }
-                else if (clickItemObj.equals("Master"))
-                {
+                } else if (clickItemObj.equals("Master")) {
                     Toast.makeText(PlayGameMode.this, "Error: " + clickItemObj.toString(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -99,7 +90,7 @@ public class PlayGameMode extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             onBackPressed();
-            return  true;
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

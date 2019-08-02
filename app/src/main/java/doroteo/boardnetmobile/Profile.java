@@ -67,13 +67,12 @@ public class Profile extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(Profile.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                URL + "/users/" + preferences.getString("username", "test"),
+                URL + "/users/" + preferences.getString("username", ""),
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            //ako je success = true znaci da je registracija uspjela
                             if (response.getBoolean("success")) {
                                 if (!response.getJSONObject("result").getString("name").equals("null"))
                                     nameEditText.setText(response.getJSONObject("result").getString("name"));
@@ -88,9 +87,13 @@ public class Profile extends AppCompatActivity {
                                 if (!response.getJSONObject("result").getString("bgg_username").equals("null"))
                                     bggUsernameEditText.setText(response.getJSONObject("result").getString("bgg_username"));
                                 user_id = response.getJSONObject("result").getInt("id");
+                            } else {
+                                Toast.makeText(Profile.this, response.getString("result"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             Log.e("Poruka", "Profile: failed reading");
+                            Toast.makeText(Profile.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(Profile.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -99,8 +102,16 @@ public class Profile extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Poruka", "Request filed: " + error.toString());
                         Toast.makeText(Profile.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Profile.this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                });
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<String, String>();
+                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                return header;
+            }
+        };
         requestQueue.add(jsonObjectRequest);
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +121,7 @@ public class Profile extends AppCompatActivity {
                     final Calendar c = Calendar.getInstance();
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                     c.setTime(format.parse(dateOfBirthEditText.getText().toString()));
-                    DecimalFormat mFormat= new DecimalFormat("00");
+                    DecimalFormat mFormat = new DecimalFormat("00");
                     mFormat.setRoundingMode(RoundingMode.DOWN);
                     mYear = c.get(Calendar.YEAR);
                     mMonth = c.get(Calendar.MONTH);
@@ -120,7 +131,7 @@ public class Profile extends AppCompatActivity {
                             new DatePickerDialog.OnDateSetListener() {
                                 @Override
                                 public void onDateSet(DatePicker view, int year, int month, int date) {
-                                    dateOfBirthEditText.setText(year + "-" + (month < 9 ? "0" : "") + (month + 1) + "-" + (date < 10 ? "0" : "")  + date);
+                                    dateOfBirthEditText.setText(year + "-" + (month < 9 ? "0" : "") + (month + 1) + "-" + (date < 10 ? "0" : "") + date);
                                 }
                             }, mYear, mMonth, mDay);
                     datePickerDialog.show();
@@ -147,7 +158,7 @@ public class Profile extends AppCompatActivity {
                 new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response){
+                    public void onResponse(JSONObject response) {
                         try {
                             if (response.getBoolean("success")) {
                                 preferences.edit().putString("username", response.getJSONObject("result").getString("username")).apply();
@@ -172,8 +183,13 @@ public class Profile extends AppCompatActivity {
                         Log.e("Poruka", "Error: " + error.toString());
                         Toast.makeText(Profile.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                     }
-                }
-        ) {
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<String, String>();
+                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                return header;
+            }
         };
         requestQueue.add(jsonObjectRequest);
     }

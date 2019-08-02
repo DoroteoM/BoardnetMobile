@@ -107,7 +107,14 @@ public class PlaySoloScore extends AppCompatActivity {
                                 Toast.makeText(PlaySoloScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                 progress.dismiss();
                             }
-                        });
+                        }) {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> header = new HashMap<String, String>();
+                        header.put("Authorization","Bearer " + preferences.getString("token", ""));
+                        return header;
+                    }
+                };
                 requestQueue.add(jsonObjectRequest);
             }
         }).start();
@@ -153,7 +160,14 @@ public class PlaySoloScore extends AppCompatActivity {
                         Toast.makeText(PlaySoloScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         progress.dismiss();
                     }
-                });
+                }){
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<String, String>();
+                header.put("Authorization","Bearer " + preferences.getString("token", ""));
+                return header;
+            }
+        };
         requestQueue.add(jsonObjectRequest);
     }
 

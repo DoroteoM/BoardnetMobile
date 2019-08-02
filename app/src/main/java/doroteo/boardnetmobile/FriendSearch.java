@@ -98,7 +98,14 @@ public class FriendSearch extends AppCompatActivity {
                                     Toast.makeText(FriendSearch.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                 }
-                            });
+                            }){
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            HashMap<String, String> header = new HashMap<String, String>();
+                            header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                            return header;
+                        }
+                    };
                     requestQueue.add(jsonObjectRequest);
                 } catch (Exception e) {
                     e.printStackTrace();

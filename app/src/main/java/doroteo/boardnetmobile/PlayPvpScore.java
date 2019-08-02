@@ -70,8 +70,7 @@ public class PlayPvpScore extends MainClass {
             public void onClick(View v) {
                 if (!pvpPlayerNameEditText.getText().equals("") || !friendsSpinner.getSelectedItem().toString().equals("")) {
                     addPlayer();
-                }
-                else
+                } else
                     Toast.makeText(PlayPvpScore.this, "You need to enter player name or select friend", Toast.LENGTH_LONG).show();
             }
         });
@@ -109,7 +108,14 @@ public class PlayPvpScore extends MainClass {
                         Log.e("Poruka", "Error: " + e.toString());
                         Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
-                });
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<String, String>();
+                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                return header;
+            }
+        };
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -163,7 +169,14 @@ public class PlayPvpScore extends MainClass {
                                     Toast.makeText(PlayPvpScore.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                 }
-                            });
+                            }) {
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            HashMap<String, String> header = new HashMap<String, String>();
+                            header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                            return header;
+                        }
+                    };
                     requestQueue.add(jsonObjectRequest);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -179,7 +192,7 @@ public class PlayPvpScore extends MainClass {
         for (JSONObject user : listOfUsers) {
             String playerId, name, won, points, score;
             playerId = user.getString("id");
-            name = !user.getString("name").equals("null") ? user.getString("name"): "";
+            name = !user.getString("name").equals("null") ? user.getString("name") : "";
             points = !user.getString("points").equals("null") ? user.getString("points") + "   " : "";
             won = user.getString("won").equals("1") ? "WINNER" : "";
             score = points + won;
@@ -253,7 +266,14 @@ public class PlayPvpScore extends MainClass {
                         Log.e("Poruka", "Error: " + e.toString());
                         Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
-                });
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<String, String>();
+                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                return header;
+            }
+        };
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -270,7 +290,7 @@ public class PlayPvpScore extends MainClass {
                             try {
                                 if (response.getBoolean("success")) {
                                     if (!response.get("result").equals(null)) {
-                                        List<String> friendsArray =  new ArrayList<String>();
+                                        List<String> friendsArray = new ArrayList<String>();
                                         JSONArray friendsList = response.getJSONArray("result");
                                         friendsArray.add("");
                                         for (int i = 0; i < friendsList.length(); i++) {
@@ -296,7 +316,14 @@ public class PlayPvpScore extends MainClass {
                             Log.e("Poruka", "Request filed: " + error.toString());
                             Toast.makeText(PlayPvpScore.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                         }
-                    });
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> header = new HashMap<String, String>();
+                    header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                    return header;
+                }
+            };
             requestQueue.add(jsonObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();

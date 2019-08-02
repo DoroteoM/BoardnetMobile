@@ -37,6 +37,7 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 
 public class Login extends AppCompatActivity {
+    private SharedPreferences preferences;
     private EditText usernameBox, passwordBox;
     Button loginButton;
     TextView registerLink;
@@ -45,7 +46,6 @@ public class Login extends AppCompatActivity {
     private ProgressDialog progress;
     private CheckBox saveLoginCheckBox;
     private Boolean saveLogin;
-    private SharedPreferences preferences;
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
 

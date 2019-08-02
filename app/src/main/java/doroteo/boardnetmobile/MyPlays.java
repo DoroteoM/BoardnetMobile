@@ -38,7 +38,7 @@ public class MyPlays extends MainClass {
         preferences = getSharedPreferences("API", MODE_PRIVATE);
         myUsername = preferences.getString("username", "test");
         setTitle("My plays");
-        
+
         getPlaysList();
     }
 
@@ -92,7 +92,14 @@ public class MyPlays extends MainClass {
                                     Toast.makeText(MyPlays.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                 }
-                            });
+                            }) {
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            HashMap<String, String> header = new HashMap<String, String>();
+                            header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                            return header;
+                        }
+                    };
                     requestQueue.add(jsonObjectRequest);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -110,7 +117,7 @@ public class MyPlays extends MainClass {
             game = play.getJSONObject("game").getString("name");
             mode = play.getString("mode");
             time = play.getString("created_at");
-            title =  game + " (" + mode + ") \n" + time;
+            title = game + " (" + mode + ") \n" + time;
 
 
             Map<String, Object> listItemMap = new HashMap<String, Object>();

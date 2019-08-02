@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameSearch extends AppCompatActivity {
+    private SharedPreferences preferences;
     private String URL = "http://boardnetapi.hostingerapp.com/api";
     private ProgressDialog progress, progress2;
     private String type, search;
@@ -46,6 +47,7 @@ public class GameSearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_search);
+        preferences = getSharedPreferences("API", MODE_PRIVATE);
         search = getIntent().getStringExtra("search");
         type = getIntent().getStringExtra("type");
         setTitle("Search: " + search);
@@ -97,7 +99,14 @@ public class GameSearch extends AppCompatActivity {
                                     Toast.makeText(GameSearch.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                 }
-                            });
+                            }){
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            HashMap<String, String> header = new HashMap<String, String>();
+                            header.put("Authorization","Bearer " + preferences.getString("token", ""));
+                            return header;
+                        }
+                    };
                     requestQueue.add(jsonObjectRequest);
                 } catch (Exception e) {
                     e.printStackTrace();
