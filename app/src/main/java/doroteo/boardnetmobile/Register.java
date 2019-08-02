@@ -92,8 +92,6 @@ public class Register extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         if (response.getString("success").equals("true")) {
-                                            Log.e("Poruka", "User: " + response.getString("user"));
-                                            Log.e("Poruka", "Username: " + response.getJSONObject("user").getString("username"));
                                             loginPrefsEditor.putBoolean("saveLogin", true);
                                             loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
                                             loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
@@ -101,7 +99,6 @@ public class Register extends AppCompatActivity {
                                             Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Register.this, Login.class)); //TODO register:username -> login:username
                                         } else {
-                                            //ako je success = false znaci da je registracija nije uspjela, prolazi se kroz errors da se vidi u cemu je problem
                                             String errors = "";
                                             try {
                                                 errors += response.getJSONObject("errors")

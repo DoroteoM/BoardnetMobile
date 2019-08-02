@@ -167,7 +167,7 @@ public class Profile extends AppCompatActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.PUT,
-                URL + "/users/" + 2,
+                URL + "/users/" + user_id,
                 new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -211,7 +211,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<String, String>();
-//                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
+                header.put("Authorization", "Bearer " + preferences.getString("token", ""));
                 return header;
             }
         };
