@@ -110,6 +110,7 @@ public class Friends extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Friends.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override

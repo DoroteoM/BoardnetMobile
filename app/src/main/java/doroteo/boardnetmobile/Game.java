@@ -131,6 +131,7 @@ public class Game extends AppCompatActivity {
                         } else {
                             Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }){
             @Override
@@ -204,6 +205,7 @@ public class Game extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override
@@ -267,6 +269,7 @@ public class Game extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override

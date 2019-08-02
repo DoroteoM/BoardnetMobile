@@ -105,6 +105,7 @@ public class Library extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Library.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override

@@ -105,6 +105,7 @@ public class Friend extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override
@@ -135,7 +136,6 @@ public class Friend extends AppCompatActivity {
     }
 
     private void addFriend() {
-        //Thread je potreban kako bi se prikazivao loading screen
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -183,6 +183,7 @@ public class Friend extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override
@@ -210,8 +211,6 @@ public class Friend extends AppCompatActivity {
                     RequestQueue requestQueue = Volley.newRequestQueue(Friend.this);
 
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("username", myUsername);
-                    params.put("friend_username", friendUsername);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.DELETE,
                             URL + "/friends/user/" + myUsername + "/friend/" + friendUsername,
@@ -251,6 +250,7 @@ public class Friend extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override
@@ -321,6 +321,7 @@ public class Friend extends AppCompatActivity {
                         } else {
                             Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }){
             @Override

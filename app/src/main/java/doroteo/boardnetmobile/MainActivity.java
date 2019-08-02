@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, Games.class);
                     startActivity(intent);
                 } else if (clickItemObj.equals("Log Out")) {
+                    finish();
                     Intent intent = new Intent(MainActivity.this, Login.class);
                     startActivity(intent);
                 } else {

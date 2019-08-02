@@ -108,6 +108,7 @@ public class FriendSearch extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(FriendSearch.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override

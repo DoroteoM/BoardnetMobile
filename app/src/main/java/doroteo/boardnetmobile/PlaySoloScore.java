@@ -118,6 +118,7 @@ public class PlaySoloScore extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(PlaySoloScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                 }
+                                progress.dismiss();
                             }
                         }) {
                     @Override
@@ -182,6 +183,7 @@ public class PlaySoloScore extends AppCompatActivity {
                         } else {
                             Toast.makeText(PlaySoloScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }){
             @Override

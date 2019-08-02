@@ -109,6 +109,7 @@ public class GameSearch extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(GameSearch.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override

@@ -135,6 +135,7 @@ public class Login extends AppCompatActivity {
 
                                     progress.dismiss();
                                     //Toast.makeText(Login.this, "Login successful", Toast.LENGTH_LONG).show();
+                                    finish();
                                     startActivity(new Intent(Login.this, MainActivity.class));
                                 }
                                 else {
@@ -183,6 +184,7 @@ public class Login extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(Login.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                 }
+                                progress.dismiss();
                             }
                         }
                     );

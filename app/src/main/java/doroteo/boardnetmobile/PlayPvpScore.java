@@ -119,6 +119,7 @@ public class PlayPvpScore extends MainClass {
                         } else {
                             Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }) {
             @Override
@@ -191,6 +192,7 @@ public class PlayPvpScore extends MainClass {
                                     } else {
                                         Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }) {
                         @Override
@@ -300,6 +302,7 @@ public class PlayPvpScore extends MainClass {
                         } else {
                             Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }) {
             @Override
@@ -362,6 +365,7 @@ public class PlayPvpScore extends MainClass {
                             } else {
                                 Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
+                            progress.dismiss();
                         }
                     }) {
                 @Override

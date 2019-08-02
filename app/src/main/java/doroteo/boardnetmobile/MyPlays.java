@@ -102,6 +102,7 @@ public class MyPlays extends MainClass {
                                     } else {
                                         Toast.makeText(MyPlays.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }) {
                         @Override

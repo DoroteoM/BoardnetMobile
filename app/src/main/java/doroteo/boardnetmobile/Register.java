@@ -156,6 +156,7 @@ public class Register extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Register.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             });
                     requestQueue.add(jsonObjectRequest);

@@ -154,6 +154,7 @@ public class Games extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Games.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
+                                    progress.dismiss();
                                 }
                             }){
                         @Override
@@ -209,6 +210,7 @@ public class Games extends AppCompatActivity {
                         } else {
                             Toast.makeText(Games.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        progress.dismiss();
                     }
                 }){
             @Override
