@@ -42,7 +42,7 @@ public class Login extends AppCompatActivity {
     Button loginButton;
     TextView registerLink;
     ProgressBar loading;
-    private String URL ="http://boardnetapi.hostingerapp.com/api";
+    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private ProgressDialog progress;
     private CheckBox saveLoginCheckBox;
     private Boolean saveLogin;
@@ -55,12 +55,12 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         preferences = getSharedPreferences("API", MODE_PRIVATE);
 
-        usernameBox = (EditText)findViewById(R.id.usernameBox);
-        passwordBox = (EditText)findViewById(R.id.passwordBox);
-        loginButton = (Button)findViewById(R.id.loginButton);
-        registerLink = (TextView)findViewById(R.id.registerLink);
-        loading = (ProgressBar)findViewById(R.id.LoadingBar);
-        saveLoginCheckBox = (CheckBox)findViewById(R.id.saveLoginCheckBox);
+        usernameBox = (EditText) findViewById(R.id.usernameBox);
+        passwordBox = (EditText) findViewById(R.id.passwordBox);
+        loginButton = (Button) findViewById(R.id.loginButton);
+        registerLink = (TextView) findViewById(R.id.registerLink);
+        loading = (ProgressBar) findViewById(R.id.LoadingBar);
+        saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 
@@ -72,8 +72,7 @@ public class Login extends AppCompatActivity {
         }
 
 
-        loginButton.setOnClickListener(new View.OnClickListener()
-        {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
@@ -108,85 +107,35 @@ public class Login extends AppCompatActivity {
                     loginPrefsEditor = loginPreferences.edit();
 
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.POST,
-                        URL + "/auth/login",
-                        new JSONObject(params),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                //Toast.makeText(Register.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                                try
-                            {
-                                //ako je success = true znaci da je registracija uspjela
-                                if (response.getString("response").equals("success"))
-                                {
-                                    Log.e("Poruka", "Token: " + response.getJSONObject("result").getString("token"));
-                                    preferences.edit().putString("token", response.getJSONObject("result").getString("token")).apply();
-                                    preferences.edit().putString("username", usernameBox.getText().toString()).apply();
-
-                                    if (saveLoginCheckBox.isChecked()) {
-                                        loginPrefsEditor.putBoolean("saveLogin", true);
-                                        loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
-                                        loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
+                            Request.Method.POST,
+                            URL + "/auth/login",
+                            new JSONObject(params),
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    onSuccessDo(response);
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError e) {
+                                    if (e.networkResponse.statusCode == 404) {
+                                        Toast.makeText(Login.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
+                                    } else if (e.networkResponse.statusCode == 401) {
+                                        Toast.makeText(Login.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                        finish();
+                                        Intent myIntent = new Intent(getBaseContext(), Login.class);
+                                        startActivity(myIntent);
+                                    } else if (e.networkResponse.statusCode == 403) {
+                                        Toast.makeText(Login.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
+                                    } else if (e.networkResponse.statusCode == 500) {
+                                        Toast.makeText(Login.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
                                     } else {
-                                        loginPrefsEditor.clear();
-                                        loginPrefsEditor.commit();
-                                    }
-
-                                    progress.dismiss();
-                                    //Toast.makeText(Login.this, "Login successful", Toast.LENGTH_LONG).show();
-                                    finish();
-                                    startActivity(new Intent(Login.this, MainActivity.class));
-                                }
-                                else {
-                                    //ako je response = error znaci da je registracija nije uspjela, prolazi se kroz errors da se vidi u cemu je problem
-                                    try {
-                                        if (response.getString("message").equals("invalid_credentials"))
-                                        {
-                                            Log.e("Poruka", "Wrong username or password.");
-                                            Toast.makeText(Login.this, "Wrong username or password.", Toast.LENGTH_LONG).show();
-                                        }
-                                        else if (response.getString("message").equals("failed_to_create_token"))
-                                        {
-                                            Log.e("Poruka", "Failed to create token.");
-                                            Toast.makeText(Login.this, "Failed to create token.", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                    catch (JSONException e)
-                                    {
-                                        Log.e("Poruka", e.toString());
-                                        Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Login.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
-
                             }
-                                catch (JSONException e)
-                            {
-                                Log.e("Poruka", "User: failed reading" );
-                            }
-                        }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError e) {
-                                if (e.networkResponse.statusCode == 404) {
-                                    Toast.makeText(Login.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                } else if (e.networkResponse.statusCode == 401) {
-                                    Toast.makeText(Login.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
-                                    finish();
-                                    Intent myIntent = new Intent(getBaseContext(), Login.class);
-                                    startActivity(myIntent);
-                                } else if (e.networkResponse.statusCode == 403) {
-                                    Toast.makeText(Login.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                } else if (e.networkResponse.statusCode == 500) {
-                                    Toast.makeText(Login.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(Login.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                                }
-                                progress.dismiss();
-                            }
-                        }
                     );
                     requestQueue.add(jsonObjectRequest);
                 } catch (Exception e) {
@@ -195,5 +144,44 @@ public class Login extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void onSuccessDo(JSONObject response) {
+        try {
+            if (response.getString("response").equals("success")) {
+                Log.e("Poruka", "Token: " + response.getJSONObject("result").getString("token"));
+                preferences.edit().putString("token", response.getJSONObject("result").getString("token")).apply();
+                preferences.edit().putString("username", usernameBox.getText().toString()).apply();
+
+                if (saveLoginCheckBox.isChecked()) {
+                    loginPrefsEditor.putBoolean("saveLogin", true);
+                    loginPrefsEditor.putString("username", usernameBox.getText().toString()).apply();
+                    loginPrefsEditor.putString("password", passwordBox.getText().toString()).apply();
+                } else {
+                    loginPrefsEditor.clear();
+                    loginPrefsEditor.commit();
+                }
+                progress.dismiss();
+                finish();
+                startActivity(new Intent(Login.this, MainActivity.class));
+            } else {
+                try {
+                    if (response.getString("message").equals("invalid_credentials")) {
+                        Log.e("Poruka", "Wrong username or password.");
+                        Toast.makeText(Login.this, "Wrong username or password.", Toast.LENGTH_LONG).show();
+                    } else if (response.getString("message").equals("failed_to_create_token")) {
+                        Log.e("Poruka", "Failed to create token.");
+                        Toast.makeText(Login.this, "Failed to create token.", Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    Log.e("Poruka", e.toString());
+                    Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
+                }
+                progress.dismiss();
+            }
+        } catch (JSONException e) {
+            Log.e("Poruka", "User: failed reading");
+            Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 }
