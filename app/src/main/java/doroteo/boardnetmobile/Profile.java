@@ -28,8 +28,12 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import static doroteo.boardnetmobile.ErrorResponse.*;
 
 public class Profile extends AppCompatActivity {
     private SharedPreferences preferences;
@@ -56,6 +60,36 @@ public class Profile extends AppCompatActivity {
         btnSave = (Button) findViewById(R.id.btnSave);
 
         this.getUser();
+
+        btnDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    final Calendar c = Calendar.getInstance();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    c.setTime(format.parse(dateOfBirthEditText.getText().toString().equals("") ?
+                            new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()) :
+                            dateOfBirthEditText.getText().toString()));
+                    DecimalFormat mFormat = new DecimalFormat("00");
+                    mFormat.setRoundingMode(RoundingMode.DOWN);
+                    mYear = c.get(Calendar.YEAR);
+                    mMonth = c.get(Calendar.MONTH);
+                    mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(Profile.this,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int date) {
+                                    dateOfBirthEditText.setText(year + "-" + (month < 9 ? "0" : "") + (month + 1) + "-" + (date < 10 ? "0" : "") + date);
+                                }
+                            }, mYear, mMonth, mDay);
+                    datePickerDialog.show();
+                } catch (ParseException e) {
+                    Toast.makeText(Profile.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(Profile.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,26 +129,17 @@ public class Profile extends AppCompatActivity {
                         } catch (JSONException e) {
                             Log.e("Poruka", "Profile: failed reading");
                             Toast.makeText(Profile.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                            Toast.makeText(Profile.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(Profile.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(Profile.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, Profile.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(Profile.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(Profile.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(Profile.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }) {
@@ -127,32 +152,7 @@ public class Profile extends AppCompatActivity {
         };
         requestQueue.add(jsonObjectRequest);
 
-        btnDatePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    final Calendar c = Calendar.getInstance();
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    c.setTime(format.parse(dateOfBirthEditText.getText().toString()));
-                    DecimalFormat mFormat = new DecimalFormat("00");
-                    mFormat.setRoundingMode(RoundingMode.DOWN);
-                    mYear = c.get(Calendar.YEAR);
-                    mMonth = c.get(Calendar.MONTH);
-                    mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(Profile.this,
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year, int month, int date) {
-                                    dateOfBirthEditText.setText(year + "-" + (month < 9 ? "0" : "") + (month + 1) + "-" + (date < 10 ? "0" : "") + date);
-                                }
-                            }, mYear, mMonth, mDay);
-                    datePickerDialog.show();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private void save() {
@@ -162,8 +162,9 @@ public class Profile extends AppCompatActivity {
         params.put("email", emailEditText.getText().toString());
         params.put("name", nameEditText.getText().toString());
         params.put("surname", surnameEditText.getText().toString());
-        params.put("date_of_birth", dateOfBirthEditText.getText().toString());
         params.put("bgg_username", bggUsernameEditText.getText().toString());
+        if (!dateOfBirthEditText.getText().toString().equals(""))
+            params.put("date_of_birth", dateOfBirthEditText.getText().toString());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.PUT,
@@ -192,19 +193,11 @@ public class Profile extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(Profile.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(Profile.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, Profile.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(Profile.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(Profile.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(Profile.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }) {
@@ -217,5 +210,4 @@ public class Profile extends AppCompatActivity {
         };
         requestQueue.add(jsonObjectRequest);
     }
-
 }

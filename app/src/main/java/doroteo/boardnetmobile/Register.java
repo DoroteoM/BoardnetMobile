@@ -3,6 +3,7 @@ package doroteo.boardnetmobile;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -171,5 +172,25 @@ public class Register extends AppCompatActivity {
             progress.dismiss();
             Toast.makeText(Register.this, errors, Toast.LENGTH_LONG).show();
         }
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }

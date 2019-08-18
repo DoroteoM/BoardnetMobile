@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.security.NetworkSecurityPolicy;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -183,5 +184,25 @@ public class Login extends AppCompatActivity {
             Log.e("Poruka", "User: failed reading");
             Toast.makeText(Login.this, e.toString(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }
