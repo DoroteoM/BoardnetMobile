@@ -128,66 +128,35 @@
         android:autofillHints="@string/username"/>
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/bggUsernameTextView"
         android:layout_width="126dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:text="@string/email"
+        android:text="@string/bgg_username"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
     <TextView
-        android:id="@+id/emailValueTextView"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:gravity="right"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/usernameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/usernameValueTextView"
-        tools:ignore="LabelFor"
-        android:autofillHints="@string/email"/>
-
-    <TextView
-        android:id="@+id/bggUsernameTextView"
-        android:layout_width="126dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/bgg_username"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
-
-    <TextView
         android:id="@+id/bggUsernameValueTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:autofillHints="@string/bgg_username"
         android:ems="10"
         android:gravity="right"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/bggUsernameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/emailValueTextView"
-        tools:ignore="LabelFor"
-        android:autofillHints="@string/bgg_username"/>
+        app:layout_constraintTop_toBottomOf="@+id/usernameValueTextView"
+        tools:ignore="LabelFor" />
 
     <Button
         android:id="@+id/btnAddFriend"

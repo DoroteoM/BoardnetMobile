@@ -12,7 +12,7 @@ import java.util.*;
 
 //import com.loopj.android.http.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MainClass {
     public static final String EXTRA_MESSAGE = "doroteo.boardnetmobile.MESSAGE";
 
     @Override
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 } else if (clickItemObj.equals("Log Out")) {
                     finish();
                     Intent intent = new Intent(MainActivity.this, Login.class);
+                    intent.putExtra("loggedOut", "true");
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(MainActivity.this, Test.class);
-                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
         });

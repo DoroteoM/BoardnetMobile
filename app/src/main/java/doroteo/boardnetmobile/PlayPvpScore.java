@@ -3,8 +3,8 @@ package doroteo.boardnetmobile;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,9 +34,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import doroteo.boardnetmobile.models.Player;
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
 
 public class PlayPvpScore extends MainClass {
+    public String URL = "http://boardnetapi.hostingerapp.com/api";
+    public ProgressDialog progress;
     private String myUsername, bgg_game_id, playId;
     private EditText pvpPlayerNameEditText, pvpPlayerPointsEditText;
     private Spinner friendsSpinner;
@@ -105,19 +107,11 @@ public class PlayPvpScore extends MainClass {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(PlayPvpScore.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(PlayPvpScore.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, PlayPvpScore.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(PlayPvpScore.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(PlayPvpScore.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         progress.dismiss();
                     }
@@ -178,19 +172,11 @@ public class PlayPvpScore extends MainClass {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(PlayPvpScore.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(PlayPvpScore.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, PlayPvpScore.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(PlayPvpScore.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(PlayPvpScore.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -242,7 +228,7 @@ public class PlayPvpScore extends MainClass {
                 HashMap clickItemMap = (HashMap) clickItemObj;
                 String playerId = clickItemMap.get("playerId").toString();
                 finish();
-                Intent myIntent = new Intent(getBaseContext(), PlayPvpNewPlayer.class);
+                Intent myIntent = new Intent(getBaseContext(), PlayPvpEditPlayer.class);
                 myIntent.putExtra("playId", playId);
                 myIntent.putExtra("playerId", playerId);
                 myIntent.putExtra("bgg_game_id", bgg_game_id);
@@ -288,19 +274,11 @@ public class PlayPvpScore extends MainClass {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(PlayPvpScore.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(PlayPvpScore.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, PlayPvpScore.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(PlayPvpScore.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(PlayPvpScore.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         progress.dismiss();
                     }
@@ -351,19 +329,11 @@ public class PlayPvpScore extends MainClass {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError e) {
-                            if (e.networkResponse.statusCode == 404) {
-                                Toast.makeText(PlayPvpScore.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 401) {
-                                Toast.makeText(PlayPvpScore.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                            errorResponse(e, PlayPvpScore.this);
+                            if (e.networkResponse.statusCode == 401) {
                                 finish();
                                 Intent myIntent = new Intent(getBaseContext(), Login.class);
                                 startActivity(myIntent);
-                            } else if (e.networkResponse.statusCode == 403) {
-                                Toast.makeText(PlayPvpScore.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 500) {
-                                Toast.makeText(PlayPvpScore.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(PlayPvpScore.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
                             progress.dismiss();
                         }

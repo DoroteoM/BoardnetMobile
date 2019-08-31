@@ -25,11 +25,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Friend extends AppCompatActivity {
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
+
+public class Friend extends MainClass {
     private SharedPreferences preferences;
     private ProgressDialog progress;
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
-    private TextView nameValueTextView, surnameValueTextView, usernameValueTextView, emailValueTextView, bggUsernameValueTextView, dateOfBirthValueTextView;
+    private TextView nameValueTextView, surnameValueTextView, usernameValueTextView, bggUsernameValueTextView, dateOfBirthValueTextView;
     private Button btnAddFriend;
     private String myUsername, friendUsername, name;
     private Boolean befriended;
@@ -44,7 +45,6 @@ public class Friend extends AppCompatActivity {
         nameValueTextView = (TextView) findViewById(R.id.nameValueTextView);
         surnameValueTextView = (TextView) findViewById(R.id.surnameValueTextView);
         usernameValueTextView = (TextView) findViewById(R.id.usernameValueTextView);
-        emailValueTextView = (TextView) findViewById(R.id.emailValueTextView);
         bggUsernameValueTextView = (TextView) findViewById(R.id.bggUsernameValueTextView);
         dateOfBirthValueTextView = (TextView) findViewById(R.id.dateOfBirthValueTextView);
         btnAddFriend = (Button) findViewById(R.id.btnAddFriend);
@@ -91,19 +91,11 @@ public class Friend extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Friend.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Friend.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Friend.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Friend.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Friend.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -169,19 +161,11 @@ public class Friend extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Friend.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Friend.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Friend.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Friend.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Friend.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -236,19 +220,11 @@ public class Friend extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Friend.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Friend.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Friend.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Friend.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Friend.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -290,8 +266,6 @@ public class Friend extends AppCompatActivity {
                                     dateOfBirthValueTextView.setText(response.getJSONObject("result").getString("date_of_birth").substring(0, 10));
                                 if (!response.getJSONObject("result").getString("username").equals("null"))
                                     usernameValueTextView.setText(response.getJSONObject("result").getString("username"));
-                                if (!response.getJSONObject("result").getString("email").equals("null"))
-                                    emailValueTextView.setText(response.getJSONObject("result").getString("email"));
                                 if (!response.getJSONObject("result").getString("bgg_username").equals("null"))
                                     bggUsernameValueTextView.setText(response.getJSONObject("result").getString("bgg_username"));
                                 name = nameValueTextView.getText().toString() + ' ' + surnameValueTextView.getText().toString();
@@ -307,19 +281,11 @@ public class Friend extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(Friend.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(Friend.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, Friend.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(Friend.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(Friend.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(Friend.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         progress.dismiss();
                     }
@@ -339,9 +305,18 @@ public class Friend extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            onBackPressed();
-            return  true;
+            finish();
+            Intent myIntent = new Intent(Friend.this, Friends.class);
+            startActivity(myIntent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent myIntent = new Intent(Friend.this, Friends.class);
+        startActivity(myIntent);
     }
 }

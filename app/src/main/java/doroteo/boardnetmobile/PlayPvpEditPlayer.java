@@ -30,19 +30,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayPvpNewPlayer extends AppCompatActivity {
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
+import static doroteo.boardnetmobile.ErrorResponse.*;
+
+public class PlayPvpEditPlayer extends MainClass {
     private SharedPreferences preferences;
     private String myUsername, playId, playerId, playerUsername, bgg_game_id;
     private Spinner friendsSpinner;
     private Switch wonSwitch;
     private EditText pvpPlayerNameEditText, pvpPlayerPointsEditText;
-    private Button savePlayerButton, removePlayerButton;
+    private Button savePlayerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_pvp_new_player);
+        setContentView(R.layout.activity_play_pvp_edit_player);
         setTitle("Add player");
         preferences = getSharedPreferences("API", MODE_PRIVATE);
         myUsername = preferences.getString("username", "test");
@@ -55,7 +56,6 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
         wonSwitch = (Switch) findViewById(R.id.wonSwitch);
         friendsSpinner = (Spinner) findViewById(R.id.friendsSpinner);
         savePlayerButton = (Button) findViewById(R.id.savePlayerButton);
-        removePlayerButton = (Button) findViewById(R.id.removePlayerButton);
 
 
         if (playerId != null)
@@ -73,7 +73,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
 
     private void fillPlayerData() {
         try {
-            RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpNewPlayer.this);
+            RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpEditPlayer.this);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     URL + "/player/" + playerId,
@@ -86,37 +86,31 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
                                     if (!response.get("result").equals(null)) {
                                         Boolean won = response.getJSONObject("result").getString("won").equals("1") ? true : false;
                                         pvpPlayerNameEditText.setText(response.getJSONObject("result").getString("name"));
-                                        pvpPlayerPointsEditText.setText(response.getJSONObject("result").getString("points"));
+                                        if (!response.getJSONObject("result").getString("points").equals("null"))
+                                            pvpPlayerPointsEditText.setText(response.getJSONObject("result").getString("points"));
                                         wonSwitch.setChecked(won);
-                                        playerUsername = response.getJSONObject("result").getJSONObject("user").getString("username");
+                                        if (!response.getJSONObject("result").getString("user").equals("null"))
+                                            playerUsername = response.getJSONObject("result").getJSONObject("user").getString("username");
                                         fillSpinner();
                                     }
                                 } else {
                                     Log.e("Poruka", response.getString("result"));
-                                    Toast.makeText(PlayPvpNewPlayer.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PlayPvpEditPlayer.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e("Poruka", "Error: " + e);
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(PlayPvpEditPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError e) {
-                            if (e.networkResponse.statusCode == 404) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 401) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                            errorResponse(e, PlayPvpEditPlayer.this);
+                            if (e.networkResponse.statusCode == 401) {
                                 finish();
                                 Intent myIntent = new Intent(getBaseContext(), Login.class);
                                 startActivity(myIntent);
-                            } else if (e.networkResponse.statusCode == 403) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 500) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
                         }
                     }) {
@@ -135,7 +129,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
 
     private void fillSpinner() {
         try {
-            RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpNewPlayer.this);
+            RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpEditPlayer.this);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     URL + "/play/friends-not-in-play/" + playId,
@@ -154,37 +148,29 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
                                         }
                                         if (!playerUsername.equals(""))
                                             friendsArray.add(playerUsername);
-                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(PlayPvpNewPlayer.this, android.R.layout.simple_spinner_item, friendsArray);
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(PlayPvpEditPlayer.this, android.R.layout.simple_spinner_item, friendsArray);
                                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         friendsSpinner.setAdapter(adapter);
                                         friendsSpinner.setSelection(adapter.getPosition(playerUsername));
                                     }
                                 } else {
                                     Log.e("Poruka", response.getString("result"));
-                                    Toast.makeText(PlayPvpNewPlayer.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PlayPvpEditPlayer.this, "Error: " + response.getString("result"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e("Poruka", "Error: " + e);
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(PlayPvpEditPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError e) {
-                            if (e.networkResponse.statusCode == 404) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 401) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                            errorResponse(e, PlayPvpEditPlayer.this);
+                            if (e.networkResponse.statusCode == 401) {
                                 finish();
                                 Intent myIntent = new Intent(getBaseContext(), Login.class);
                                 startActivity(myIntent);
-                            } else if (e.networkResponse.statusCode == 403) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                            } else if (e.networkResponse.statusCode == 500) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                             }
                         }
                     }) {
@@ -202,7 +188,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
     }
 
     private void savePlayer() {
-        RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpNewPlayer.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(PlayPvpEditPlayer.this);
         Map<String, String> params = new HashMap<String, String>();
         if (!pvpPlayerNameEditText.getText().toString().equals(""))
             params.put("name", pvpPlayerNameEditText.getText().toString());
@@ -223,32 +209,24 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             if (response.getString("success").equals("true")) {
-                                Toast.makeText(PlayPvpNewPlayer.this, "Player stats saved", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PlayPvpEditPlayer.this, "Player stats saved", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(PlayPvpNewPlayer.this, response.getString("result"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(PlayPvpEditPlayer.this, response.getString("result"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             Log.e("Poruka", e.toString());
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(PlayPvpEditPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, PlayPvpEditPlayer.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(PlayPvpNewPlayer.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }) {
@@ -268,7 +246,7 @@ public class PlayPvpNewPlayer extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-            Intent myIntent = new Intent(PlayPvpNewPlayer.this, PlayPvpScore.class);
+            Intent myIntent = new Intent(PlayPvpEditPlayer.this, PlayPvpScore.class);
             myIntent.putExtra("bgg_game_id", bgg_game_id);
             myIntent.putExtra("playId", playId);
             startActivity(myIntent);

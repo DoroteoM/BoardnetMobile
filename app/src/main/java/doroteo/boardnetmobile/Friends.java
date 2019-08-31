@@ -30,8 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Friends extends AppCompatActivity {
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
+
+public class Friends extends MainClass {
     private SharedPreferences preferences;
     private ProgressDialog progress;
     private Button findByNameButton, findByUsernameButton;
@@ -96,19 +97,11 @@ public class Friends extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Friends.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Friends.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Friends.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Friends.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Friends.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Friends.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -140,7 +133,6 @@ public class Friends extends AppCompatActivity {
 
             if ( !preferences.getString("username", "test").equals(username) ) {
                 Map<String, Object> listItemMap = new HashMap<String, Object>();
-                listItemMap.put("imageId", R.mipmap.ic_launcher);
                 listItemMap.put("username", username);
                 listItemMap.put("name", name + ' ' + surname);
                 itemDataList.add(listItemMap);
@@ -148,7 +140,7 @@ public class Friends extends AppCompatActivity {
         }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(Friends.this, itemDataList, R.layout.layout_friends,
-                new String[]{"imageId", "username", "name"}, new int[]{R.id.friendImageView, R.id.friendSearchUsernameTextView, R.id.friendSearchNameTextView});
+                new String[]{"username", "name"}, new int[]{R.id.friendUsernameTextView, R.id.friendNameTextView});
 
         ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(simpleAdapter);
@@ -160,6 +152,7 @@ public class Friends extends AppCompatActivity {
                 HashMap clickItemMap = (HashMap) clickItemObj;
                 String username = (String) clickItemMap.get("username");
 
+                finish();
                 Intent myIntent = new Intent(getBaseContext(), Friend.class);
                 myIntent.putExtra("username", username);
                 startActivity(myIntent);
@@ -177,6 +170,7 @@ public class Friends extends AppCompatActivity {
                 if (searchFriendEditText.getText().toString().equals("")) {
                     Toast.makeText(Friends.this, "Some name expected", Toast.LENGTH_LONG).show();
                 } else {
+                    finish();
                     Intent myIntent = new Intent(getBaseContext(), FriendSearch.class);
                     myIntent.putExtra("search", searchFriendEditText.getText().toString());
                     myIntent.putExtra("by", "name");
@@ -191,6 +185,7 @@ public class Friends extends AppCompatActivity {
                 if (searchFriendEditText.getText().toString().equals("")) {
                     Toast.makeText(Friends.this, "Some name expected", Toast.LENGTH_LONG).show();
                 } else {
+                    finish();
                     Intent myIntent = new Intent(getBaseContext(), FriendSearch.class);
                     myIntent.putExtra("search", searchFriendEditText.getText().toString());
                     myIntent.putExtra("by", "username");

@@ -35,12 +35,11 @@ import java.util.Map;
 
 import static doroteo.boardnetmobile.ErrorResponse.*;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends MainClass {
     private SharedPreferences preferences;
     private String URL = "http://boardnetapi.hostingerapp.com/api";
     private EditText nameEditText, surnameEditText, usernameEditText, emailEditText, bggUsernameEditText, dateOfBirthEditText;
-    private DatePicker dateOfBirthDatePicker;
-    private Button btnSave, btnAddTeammate, btnDatePicker;
+    private Button btnSave, btnDatePicker;
     private int user_id, mYear, mMonth, mDay;
 
     @Override
@@ -189,7 +188,6 @@ public class Profile extends AppCompatActivity {
                         }
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {

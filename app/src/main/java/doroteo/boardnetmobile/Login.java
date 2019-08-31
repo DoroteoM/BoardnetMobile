@@ -37,13 +37,13 @@ import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
-public class Login extends AppCompatActivity {
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
+
+public class Login extends MainClass {
     private SharedPreferences preferences;
     private EditText usernameBox, passwordBox;
-    Button loginButton;
-    TextView registerLink;
-    ProgressBar loading;
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
+    private Button loginButton;
+    private TextView registerLink;
     private ProgressDialog progress;
     private CheckBox saveLoginCheckBox;
     private Boolean saveLogin;
@@ -60,7 +60,6 @@ public class Login extends AppCompatActivity {
         passwordBox = (EditText) findViewById(R.id.passwordBox);
         loginButton = (Button) findViewById(R.id.loginButton);
         registerLink = (TextView) findViewById(R.id.registerLink);
-        loading = (ProgressBar) findViewById(R.id.LoadingBar);
         saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
@@ -70,6 +69,8 @@ public class Login extends AppCompatActivity {
             usernameBox.setText(loginPreferences.getString("username", ""));
             passwordBox.setText(loginPreferences.getString("password", ""));
             saveLoginCheckBox.setChecked(true);
+            if (getIntent().getStringExtra("loggedOut") == null)
+                login();
         }
 
 
@@ -120,20 +121,7 @@ public class Login extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Login.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Login.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
-                                        finish();
-                                        Intent myIntent = new Intent(getBaseContext(), Login.class);
-                                        startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Login.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Login.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Login.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                                    errorResponse(e, Login.this);
                                     progress.dismiss();
                                 }
                             }

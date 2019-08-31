@@ -29,8 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FriendSearch extends AppCompatActivity {
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
+
+public class FriendSearch extends MainClass {
     private SharedPreferences preferences;
     private ProgressDialog progress;
     private String search, by;
@@ -94,19 +95,11 @@ public class FriendSearch extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(FriendSearch.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(FriendSearch.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, FriendSearch.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(FriendSearch.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(FriendSearch.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(FriendSearch.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -138,15 +131,14 @@ public class FriendSearch extends AppCompatActivity {
 
             if ( !preferences.getString("username", "test").equals(username) ) {
                 Map<String, Object> listItemMap = new HashMap<String, Object>();
-                listItemMap.put("imageId", R.mipmap.ic_launcher);
                 listItemMap.put("username", username);
                 listItemMap.put("name", name + ' ' + surname);
                 itemDataList.add(listItemMap);
             }
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(FriendSearch.this, itemDataList, R.layout.activity_friend_search,
-                new String[]{"imageId", "username", "name"}, new int[]{R.id.friendImageView, R.id.friendSearchUsernameTextView, R.id.friendSearchNameTextView});
+        SimpleAdapter simpleAdapter = new SimpleAdapter(FriendSearch.this, itemDataList, R.layout.layout_friends,
+                new String[]{"username", "name"}, new int[]{R.id.friendUsernameTextView, R.id.friendNameTextView});
 
         ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(simpleAdapter);
@@ -158,6 +150,7 @@ public class FriendSearch extends AppCompatActivity {
                 HashMap clickItemMap = (HashMap) clickItemObj;
                 String username = (String) clickItemMap.get("username");
 
+                finish();
                 Intent myIntent = new Intent(getBaseContext(), Friend.class);
                 myIntent.putExtra("username", username);
                 startActivity(myIntent);
@@ -170,9 +163,18 @@ public class FriendSearch extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            onBackPressed();
-            return  true;
+            finish();
+            Intent myIntent = new Intent(FriendSearch.this, Friends.class);
+            startActivity(myIntent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent myIntent = new Intent(FriendSearch.this, Friends.class);
+        startActivity(myIntent);
     }
 }

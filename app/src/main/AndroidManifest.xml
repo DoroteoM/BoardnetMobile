@@ -12,12 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Games">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".MyPlays">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PlayPvpScore" />
         </activity>
-        <activity android:name=".PlayPvpNewPlayer">
+        <activity android:name=".PlayPvpEditPlayer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PlayPvpScore" />
@@ -65,9 +70,9 @@
         <activity android:name=".GameSearch">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Games" />
+                android:value=".GamesOld" />
         </activity>
-        <activity android:name=".Games">
+        <activity android:name=".GamesOld">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -81,11 +86,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Profile">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity android:name=".Test">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

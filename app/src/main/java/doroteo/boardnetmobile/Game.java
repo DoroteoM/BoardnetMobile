@@ -25,10 +25,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Game extends AppCompatActivity {
-    private SharedPreferences preferences;
+import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
+
+public class Game extends MainClass {
     private ProgressDialog progress;
-    private String URL = "http://boardnetapi.hostingerapp.com/api";
     private String bgg_game_id;
     private TextView publishedValueTextView, playersValueTextView, timeValueTextView, ratingValueTextView, rankValueTextView;
     private Button manageLibraryButton, addPlayButton;
@@ -117,19 +117,11 @@ public class Game extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        if (e.networkResponse.statusCode == 404) {
-                            Toast.makeText(Game.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 401) {
-                            Toast.makeText(Game.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                        errorResponse(e, Game.this);
+                        if (e.networkResponse.statusCode == 401) {
                             finish();
                             Intent myIntent = new Intent(getBaseContext(), Login.class);
                             startActivity(myIntent);
-                        } else if (e.networkResponse.statusCode == 403) {
-                            Toast.makeText(Game.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                        } else if (e.networkResponse.statusCode == 500) {
-                            Toast.makeText(Game.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         progress.dismiss();
                     }
@@ -191,19 +183,11 @@ public class Game extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Game.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Game.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Game.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Game.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Game.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }
@@ -255,19 +239,11 @@ public class Game extends AppCompatActivity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError e) {
-                                    if (e.networkResponse.statusCode == 404) {
-                                        Toast.makeText(Game.this, "Error 404: Requested resource not found", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 401) {
-                                        Toast.makeText(Game.this, "Error 401: The request has not been applied because it lacks valid authentication credentials for the target resource.", Toast.LENGTH_LONG).show();
+                                    errorResponse(e, Game.this);
+                                    if (e.networkResponse.statusCode == 401) {
                                         finish();
                                         Intent myIntent = new Intent(getBaseContext(), Login.class);
                                         startActivity(myIntent);
-                                    } else if (e.networkResponse.statusCode == 403) {
-                                        Toast.makeText(Game.this, "Error 403: The server understood the request but refuses to authorize it.", Toast.LENGTH_LONG).show();
-                                    } else if (e.networkResponse.statusCode == 500) {
-                                        Toast.makeText(Game.this, "Error 500: Something went wrong at server end", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Game.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                     }
                                     progress.dismiss();
                                 }

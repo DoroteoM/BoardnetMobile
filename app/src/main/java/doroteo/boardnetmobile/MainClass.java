@@ -9,6 +9,4 @@ import android.widget.EditText;
 public class MainClass extends AppCompatActivity {
     public String URL = "http://boardnetapi.hostingerapp.com/api";
     public SharedPreferences preferences;
-    public ProgressDialog progress;
-    public String myUsername;
 }

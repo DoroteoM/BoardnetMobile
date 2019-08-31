@@ -17,28 +17,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/friendImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true" />
+        <!--<ImageView-->
+            <!--android:id="@+id/friendImageView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_alignParentBottom="true" />-->
 
         <TextView
-            android:id="@+id/friendSearchNameTextView"
-            android:layout_width="match_parent"
+            android:id="@+id/friendNameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/friendImageView"
             android:textSize="20dp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/friendSearchUsernameTextView"
-            android:layout_width="match_parent"
+            android:id="@+id/friendUsernameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/friendSearchNameTextView"
-            android:layout_toRightOf="@id/friendImageView"
+            android:layout_below="@id/friendNameTextView"
             android:textSize="20dp" />
 
     </RelativeLayout>
