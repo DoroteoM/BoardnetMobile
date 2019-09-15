@@ -31,10 +31,10 @@ import static doroteo.boardnetmobile.ErrorResponse.errorResponse;
 public class Register extends MainClass {
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
-    EditText emailBox, usernameBox, passwordBox, passwordConfirmationBox;
-    Button registerButton;
-    TextView loginLink;
-    ProgressDialog progress;
+    private EditText emailBox, usernameBox, passwordBox, passwordConfirmationBox;
+    private Button registerButton;
+    private TextView loginLink;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class Register extends MainClass {
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(Register.this, Login.class));
             }
         });

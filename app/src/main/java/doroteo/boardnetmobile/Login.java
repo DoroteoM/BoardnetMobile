@@ -85,6 +85,7 @@ public class Login extends MainClass {
         registerLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(Login.this, Register.class));
             }
         });
